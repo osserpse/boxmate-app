@@ -28,9 +28,9 @@ export default function ItemDetailPage({ params }: ItemDetailPageProps) {
       <main className="container mx-auto px-4 py-8">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-          <Link href="/dashboard" className="hover:text-lime-600">Dashboard</Link>
+          <Link href="/dashboard" className="hover:text-lime-600">Översikt</Link>
           <span>→</span>
-          <span>Electronics</span>
+          <span>Elektronik</span>
           <span>→</span>
           <span className="text-stone-900">{item.name}</span>
         </nav>
@@ -88,7 +88,7 @@ export default function ItemDetailPage({ params }: ItemDetailPageProps) {
             <Separator />
 
             <div>
-              <h2 className="text-xl font-semibold text-foreground mb-3">Description</h2>
+              <h2 className="text-xl font-semibold text-foreground mb-3">Beskrivning</h2>
               <p className="text-muted-foreground leading-relaxed">{item.description}</p>
             </div>
 
@@ -102,14 +102,14 @@ export default function ItemDetailPage({ params }: ItemDetailPageProps) {
                     <User className="w-5 h-5 text-lime-600" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-stone-900">Seller</h4>
-                    <p className="text-sm text-muted-foreground">Member since 2024</p>
+                    <h4 className="font-semibold text-stone-900">Säljare</h4>
+                    <p className="text-sm text-muted-foreground">Medlem sedan 2024</p>
                   </div>
                   <Button size="sm" className="bg-lime-500 hover:bg-lime-600">
                     <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-7 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
                     </svg>
-                    Contact Seller
+                    Kontakta säljare
                   </Button>
                 </div>
               </CardContent>
@@ -118,17 +118,17 @@ export default function ItemDetailPage({ params }: ItemDetailPageProps) {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-3">
               <Button size="lg" className="flex-1 gap-2 shadow-md hover:shadow-lg transition-shadow">
-                Buy Now
+                Köp nu
               </Button>
               <Button size="lg" variant="outline" className="flex-1">
-                Make Offer
+                Gör bud
               </Button>
             </div>
 
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
-                <span>Posted {item.createdAt}</span>
+                <span>Publicerad {item.createdAt}</span>
               </div>
             </div>
           </div>
@@ -138,15 +138,10 @@ export default function ItemDetailPage({ params }: ItemDetailPageProps) {
         <div className="mt-12">
           <Card>
             <CardContent className="p-6">
-              <h2 className="text-2xl font-bold mb-4">Description</h2>
+              <h2 className="text-2xl font-bold mb-4">Beskrivning</h2>
               <div className="prose max-w-none">
                 <p className="text-muted-foreground mb-4">
                   {item.description}
-                </p>
-                <p className="text-muted-foreground">
-                  This item has been well-maintained and comes from a smoke-free home.
-                  Perfect for students or anyone looking for reliable electronics at a great price.
-                  Includes all original accessories and packaging.
                 </p>
               </div>
             </CardContent>
@@ -158,7 +153,7 @@ export default function ItemDetailPage({ params }: ItemDetailPageProps) {
 
         {/* Related Items */}
         <div className="mt-12">
-          <h2 className="text-2xl font-bold mb-6">Similar Items</h2>
+          <h2 className="text-2xl font-bold mb-6">Liknande produkter</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {mockItems.filter(i => i.id !== item.id).slice(0, 3).map((relatedItem) => (
               <Link key={relatedItem.id} href={`/item/${relatedItem.id}`}>

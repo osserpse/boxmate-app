@@ -50,7 +50,7 @@ export function ItemCard({ item }: ItemCardProps) {
             </div>
 
             <Button size="sm" variant="outline" className="text-xs">
-              View Details
+              Visa detaljer
             </Button>
           </div>
         </CardContent>

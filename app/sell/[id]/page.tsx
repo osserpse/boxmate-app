@@ -28,10 +28,10 @@ export default function SellPage({ params }: SellPageProps) {
           </Link>
           <div>
             <h1 className="text-3xl font-bold text-stone-900">
-              {isNewItem ? 'Sell New Item' : 'Edit Item'}
+              {isNewItem ? 'Sälj ny produkt' : 'Redigera produkt'}
             </h1>
             <p className="text-muted-foreground">
-              {isNewItem ? 'Create a new listing for your item' : 'Update your item details'}
+              {isNewItem ? 'Skapa er annons för din produkt' : 'Uppdatera produktdetaljer'}
             </p>
           </div>
         </div>
@@ -42,33 +42,33 @@ export default function SellPage({ params }: SellPageProps) {
             {/* Photo Upload */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-xl">Photos</CardTitle>
+                <CardTitle className="text-xl">Foton</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="border-2 border-dashed border-stone-300 rounded-lg p-8 text-center hover:border-lime-400 transition-colors cursor-pointer">
                     <div className="space-y-2">
-                      <Upload className="w-8 h-8 text-muted-foreground mx-auto" />
+                      <Upload className="w-8 h-8 text-muted-foreground mx-8" />
                       <div>
-                        <p className="font-medium text-stone-900">Add photos of your item</p>
+                        <p className="font-medium text-stone-900">Lägg till foton av din produkt</p>
                         <p className="text-sm text-muted-foreground">
-                          Drag and drop or click to browse
+                          Dra och släpp eller klicka för att bläddra
                         </p>
                       </div>
                     </div>
                   </div>
 
                   {/* Camera button for mobile */}
-                  <Button variant="outline" className="w-full lg:hidden">
-                    <Camera className="w-4 h-4 mr-2" />
-                    Take Photo
-                  </Button>
+                    <Button variant="outline" className="w-full lg:hidden">
+                      <Camera className="w-4 h-4 mr-2" />
+                      Ta foto
+                    </Button>
 
                   {/* Photo grid placeholder */}
                   <div className="grid grid-cols-4 gap-2">
                     {[1, 2, 3, 4].map((index) => (
                       <div key={index} className="aspect-square bg-stone-100 rounded-lg flex items-center justify-center text-sm text-muted-foreground">
-                        Photo {index}
+                        Foto {index}
                       </div>
                     ))}
                   </div>
@@ -79,16 +79,16 @@ export default function SellPage({ params }: SellPageProps) {
             {/* Basic Information */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-xl">Basic Information</CardTitle>
+                <CardTitle className="text-xl">Grundinformation</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
                   <label htmlFor="title" className="block text-sm font-medium mb-2">
-                    Item Title *
+                    Produkttitel *
                   </label>
                   <Input
                     id="title"
-                    placeholder="What are you selling?"
+                    placeholder="Vad säljer du?"
                     defaultValue={isNewItem ? '' : 'Nintendo Switch Lite'}
                     className="h-11"
                   />
@@ -96,37 +96,37 @@ export default function SellPage({ params }: SellPageProps) {
 
                 <div>
                   <label htmlFor="category" className="block text-sm font-medium mb-2">
-                    Category *
+                    Kategori *
                   </label>
                   <select
                     id="category"
                     className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    <option value="">Select a category</option>
-                    <option value="electronics">Electronics</option>
-                    <option value="clothing">Clothing</option>
-                    <option value="books">Books</option>
-                    <option value="sports">Sports</option>
-                    <option value="home">Home & Garden</option>
-                    <option value="toys">Toys</option>
-                    <option value="other">Other</option>
+                    <option value="">Välj kategori</option>
+                    <option value="electronics">Elektronik</option>
+                    <option value="clothing">Kläder</option>
+                    <option value="books">Böcker</option>
+                    <option value="sports">Sport</option>
+                    <option value="home">Hem & trädgård</option>
+                    <option value="toys">Leksaker</option>
+                    <option value="other">Övrigt</option>
                   </select>
                 </div>
 
                 <div>
                   <label htmlFor="condition" className="block text-sm font-medium mb-2">
-                    Condition *
+                    Skick *
                   </label>
                   <select
                     id="condition"
                     className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    <option value="">Select condition</option>
-                    <option value="new">Like New</option>
-                    <option value="excellent">Excellent</option>
-                    <option value="good">Good</option>
-                    <option value="fair">Fair</option>
-                    <option value="poor">Poor</option>
+                    <option value="">Välj skick</option>
+                    <option value="new">Som ny</option>
+                    <option value="excellent">Utmärkt</option>
+                    <option value="good">Bra</option>
+                    <option value="fair">Skälig</option>
+                    <option value="poor">Dålig</option>
                   </select>
                 </div>
               </CardContent>
@@ -135,18 +135,18 @@ export default function SellPage({ params }: SellPageProps) {
             {/* Description */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-xl">Description</CardTitle>
+                <CardTitle className="text-xl">Beskrivning</CardTitle>
               </CardHeader>
               <CardContent>
                 <div>
                   <label htmlFor="description" className="block text-sm font-medium mb-2">
-                    Tell buyers about your item *
+                    Berätta för köpare om din produkt *
                   </label>
                   <textarea
                     id="description"
                     rows={6}
-                    placeholder="Describe your item, its condition, why you're selling it, and any other relevant details..."
-                    defaultValue={isNewItem ? '' : 'Like new condition. Barely used, comes with charger. Perfect for portable gaming.'}
+                    placeholder="Beskriv din produkt, dess skick, varför du säljer den och andra relevant detaljer..."
+                    defaultValue={isNewItem ? '' : 'Nyskick. Nästan inte använd, kommer med laddare. Perfekt för bärbar gaming.'}
                     className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
                   />
                 </div>
@@ -159,32 +159,32 @@ export default function SellPage({ params }: SellPageProps) {
             {/* Pricing */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-xl">Pricing</CardTitle>
+                <CardTitle className="text-xl">Prissättning</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
                   <label htmlFor="price" className="block text-sm font-medium mb-2">
-                    Price *
+                    Pris *
                   </label>
                   <div className="relative">
                     <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                     <Input
                       id="price"
                       type="number"
-                      placeholder="0.00"
-                      defaultValue={isNewItem ? '' : '199'}
+                      placeholder="0"
+                      defaultValue={isNewItem ? '' : '1899'}
                       className="h-11 pl-10"
                     />
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Consider similar items when pricing
+                    Betrakta liknande produkter vid prissättning
                   </p>
                 </div>
 
                 <div className="space-y-2">
                   <label className="flex items-center space-x-2">
                     <input type="checkbox" className="rounded border-stone-300" />
-                    <span className="text-sm text-muted-foreground">Price is negotiable</span>
+                    <span className="text-sm text-muted-foreground">Pris är förhandlingsbart</span>
                   </label>
                 </div>
               </CardContent>
@@ -193,30 +193,35 @@ export default function SellPage({ params }: SellPageProps) {
             {/* Location */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-xl">Location</CardTitle>
+                <CardTitle className="text-xl">Plats</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
                   <label htmlFor="location" className="block text-sm font-medium mb-2">
-                    City, State *
+                    Stad, Land *
                   </label>
                 </div>
+                <Input
+                  id="location"
+                  placeholder="ex. Stockholm, Sverige"
+                  className="h-11"
+                />
               </CardContent>
             </Card>
 
             {/* Actions */}
             <div className="space-y-3">
               <Button type="submit" size="lg" className="w-full bg-lime-500 hover:bg-lime-600">
-                {isNewItem ? 'List Item' : 'Update Listing'}
+                {isNewItem ? 'Publicera annons' : 'Uppdatera annons'}
               </Button>
 
               <Button type="button" variant="outline" size="lg" className="w-full">
-                Save as Draft
+                Spara som utkast
               </Button>
 
               <Link href="/dashboard">
                 <Button type="button" variant="ghost" size="lg" className="w-full">
-                  Cancel
+                  Avbryt
                 </Button>
               </Link>
             </div>
@@ -224,12 +229,12 @@ export default function SellPage({ params }: SellPageProps) {
             {/* Tips */}
             <Card className="bg-yellow-50 border-yellow-200">
               <CardContent className="p-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">💡 Tips for selling:</h4>
+                <h4 className="font-semibold text-yellow-800 mb-2">💡 Tips för att sälja:</h4>
                 <ul className="text-sm text-yellow-700 space-y-1">
-                  <li>• Take clear, well-lit photos</li>
-                  <li>• Write detailed descriptions</li>
-                  <li>• Set competitive prices</li>
-                  <li>• Respond quickly to buyers</li>
+                  <li>• Ta tydliga och välbelysta foton</li>
+                  <li>• Skriv detaljerada beskrivningar</li>
+                  <li>• Sätt konkurrenskraftiga priser</li>
+                  <li>• Svara snabbt på köpare</li>
                 </ul>
               </CardContent>
             </Card>

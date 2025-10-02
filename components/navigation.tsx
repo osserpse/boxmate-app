@@ -23,7 +23,7 @@ export function Navigation() {
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <Input
-                placeholder="Search for items..."
+                placeholder="Sök efter produkter..."
                 className="pl-10 pr-4"
               />
             </div>
@@ -33,13 +33,13 @@ export function Navigation() {
           <div className="flex items-center gap-3">
             <Link href="/dashboard">
               <Button variant="ghost" size="sm">
-                Dashboard
+                Översikt
               </Button>
             </Link>
 
             <Link href="/sell/new">
               <Button variant="accent" size="sm" className="bg-yellow-500 hover:bg-yellow-600">
-                Sell Item
+                Sälj produkt
               </Button>
             </Link>
 
