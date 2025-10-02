@@ -102,11 +102,11 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           <div className="space-y-4">
-            <div className="aspect-square rounded-2xl overflow-hidden bg-muted shadow-lg">
+            <div className="aspect-square rounded-2xl overflow-hidden bg-muted shadow-lg relative">
               <ItemImage
                 src={mainPhoto}
                 alt={item.name}
-                className="w-full h-full object-cover"
+                className="absolute inset-0 object-cover"
               />
             </div>
 
@@ -114,12 +114,12 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
               {thumbnailPhotos.map((photo, i) => (
                 <div
                   key={i}
-                  className="aspect-square rounded-xl overflow-hidden bg-muted/50 border border-border cursor-pointer hover:opacity-80 transition-opacity"
+                  className="aspect-square rounded-xl overflow-hidden bg-muted/50 border border-border cursor-pointer hover:opacity-80 transition-opacity relative"
                 >
                   <ItemImage
                     src={photo}
                     alt={`${item.name} view ${i + 1}`}
-                    className="w-full h-full object-cover"
+                    className="absolute inset-0 object-cover"
                   />
                 </div>
               ))}

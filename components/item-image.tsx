@@ -8,11 +8,11 @@ interface ItemImageProps {
 
 export function ItemImage({src, alt, className = ''}: ItemImageProps) {
   return (
-    <div className="relative">
+    <div className="relative w-full h-full">
       <img
         src={src}
         alt={alt}
-        className={className}
+        className={`${className} w-full h-full`}
         onError={(e) => {
           const target = e.target as HTMLImageElement;
           target.style.display = 'none';
