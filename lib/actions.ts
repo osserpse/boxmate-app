@@ -89,6 +89,59 @@ export async function addItem(data: AddItemRequest) {
   }
 }
 
+export async function updateItem(itemId: string, data: AddItemRequest) {
+  try {
+    console.log('updateItem called with:', { itemId, data });
+    const supabase = createClient()
+
+    // Handle photo URLs - store all photo URLs as JSON array
+    const photo_urls: string[] = data.photoUrls || []
+    const photos_json = photo_urls.length > 0 ? JSON.stringify(photo_urls) : null
+    const entire_photo_url = photo_urls.length > 0 ? photo_urls[0] : undefined
+
+    console.log('Updating item in database:', { itemId, data });
+
+    // Update item in database
+    const { data: updatedItem, error } = await supabase
+      .from('items')
+      .update({
+        name: data.name,
+        location: data.location,
+        description: data.description,
+        value: data.value,
+        photo_url: entire_photo_url,
+        photos: photos_json
+      })
+      .eq('id', itemId)
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Database error:', error);
+      throw new Error(`Misslyckades att uppdatera produkt: ${error.message}`)
+    }
+
+    console.log('Successfully updated item:', updatedItem);
+
+    // Revalidate dashboard and item page to reflect changes
+    revalidatePath('/dashboard')
+    revalidatePath(`/item/${itemId}`)
+
+    return {
+      success: true,
+      item: updatedItem,
+      message: 'Produkt uppdaterad framgångsrikt!'
+    }
+
+  } catch (error) {
+    console.error('updateItem error:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Okänt fel uppstod'
+    }
+  }
+}
+
 export async function deleteItem(itemId: string) {
   try {
     const supabase = createClient()

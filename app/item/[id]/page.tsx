@@ -193,7 +193,14 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
             </div>
 
             {/* Item Actions */}
-            <ItemActions itemId={item.id} itemName={item.name} />
+            <ItemActions
+              itemId={item.id}
+              itemName={item.name}
+              itemLocation={item.location}
+              itemDescription={item.description || ''}
+              itemValue={item.value}
+              itemPhotos={item.photos}
+            />
 
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
