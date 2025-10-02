@@ -1,11 +1,29 @@
 import { Navigation } from '@/components/navigation';
-import { ItemCard } from '@/components/item-card';
-import { mockItems } from '@/data/mock-items';
+import { DashboardItemsManager } from '@/components/dashboard-items-manager';
+import { createClient, Item } from '@/lib/supabase';
 import { TrendingUp, MapPin, Users } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { notFound } from 'next/navigation';
 
-export default function DashboardPage() {
+async function getItems(): Promise<Item[]> {
+  const supabase = createClient()
+
+  const { data: items, error } = await supabase
+    .from('items')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('Error fetching items:', error)
+    return []
+  }
+
+  return items || []
+}
+
+export default async function DashboardPage() {
+  const items = await getItems()
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -56,16 +74,7 @@ export default function DashboardPage() {
 
         {/* Featured Items */}
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-3xl font-bold text-stone-900">Utvalda produkter</h2>
-            <Button variant="outline">Visa alla</Button>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {mockItems.map((item) => (
-              <ItemCard key={item.id} item={item} />
-            ))}
-          </div>
+          <DashboardItemsManager initialItems={items} />
         </div>
 
         {/* Categories */}

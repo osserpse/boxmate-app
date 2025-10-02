@@ -1,25 +1,74 @@
 import { Navigation } from '@/components/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { mockItems, formatCurrency } from '@/data/mock-items';
-import { MapPin, User, Calendar, Phone, Mail, MessageCircle, Heart, Share2, ChevronLeft } from 'lucide-react';
+import { createClient, Item } from '@/lib/supabase';
+import { MapPin, User, Calendar, MessageCircle, Heart, Share2 } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ItemImage } from '@/components/item-image';
-import { ItemCard } from '@/components/item-card';
+import { ItemActions } from '@/components/item-actions';
 import { Separator } from '@/components/ui/separator';
+
 interface ItemDetailPageProps {
   params: {
     id: string;
   };
 }
 
-export default function ItemDetailPage({ params }: ItemDetailPageProps) {
-  const item = mockItems.find(item => item.id === params.id);
+async function getItem(id: string): Promise<Item | null> {
+  const supabase = createClient()
+
+  const { data: item, error } = await supabase
+    .from('items')
+    .select('*')
+    .eq('id', id)
+    .single()
+
+  if (error) {
+    console.error('Error fetching item:', error)
+    return null
+  }
+
+  return item
+}
+
+async function getRelatedItems(excludeId: string): Promise<Item[]> {
+  const supabase = createClient()
+
+  const { data: items, error } = await supabase
+    .from('items')
+    .select('*')
+    .neq('id', excludeId)
+    .order('created_at', { ascending: false })
+    .limit(3)
+
+  if (error) {
+    console.error('Error fetching related items:', error)
+    return []
+  }
+
+  return items || []
+}
+
+export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
+  const [item, relatedItems] = await Promise.all([
+    getItem(params.id),
+    getRelatedItems(params.id)
+  ]);
 
   if (!item) {
     notFound();
   }
+
+  const formatCurrency = (value: number | null | undefined): string => {
+    if (!value) return 'Ej specificerat';
+    return new Intl.NumberFormat('sv-SE', {
+      style: 'currency',
+      currency: 'SEK',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(value);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -38,8 +87,8 @@ export default function ItemDetailPage({ params }: ItemDetailPageProps) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           <div className="space-y-4">
             <div className="aspect-square rounded-2xl overflow-hidden bg-muted shadow-lg">
-              <img
-                src={item.photo}
+              <ItemImage
+                src={item.photo_url || '/placeholder-image.jpg'}
                 alt={item.name}
                 className="w-full h-full object-cover"
               />
@@ -51,8 +100,8 @@ export default function ItemDetailPage({ params }: ItemDetailPageProps) {
                   key={i}
                   className="aspect-square rounded-xl overflow-hidden bg-muted/50 border border-border cursor-pointer hover:opacity-80 transition-opacity"
                 >
-                  <img
-                    src={item.photo}
+                  <ItemImage
+                    src={item.photo_url || '/placeholder-image.jpg'}
                     alt={`${item.name} view ${i}`}
                     className="w-full h-full object-cover"
                   />
@@ -89,7 +138,9 @@ export default function ItemDetailPage({ params }: ItemDetailPageProps) {
 
             <div>
               <h2 className="text-xl font-semibold text-foreground mb-3">Beskrivning</h2>
-              <p className="text-muted-foreground leading-relaxed">{item.description}</p>
+              <p className="text-muted-foreground leading-relaxed">
+                {item.description || 'Ingen beskrivning tillgänglig.'}
+              </p>
             </div>
 
             <Separator />
@@ -116,69 +167,57 @@ export default function ItemDetailPage({ params }: ItemDetailPageProps) {
             </Card>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Button size="lg" className="flex-1 gap-2 shadow-md hover:shadow-lg transition-shadow">
+            <div className="space-y-3">
+              <Button size="lg" className="w-full bg-lime-500 hover:bg-lime-600">
                 Köp nu
               </Button>
-              <Button size="lg" variant="outline" className="flex-1">
+              <Button size="lg" variant="outline" className="w-full">
                 Gör bud
               </Button>
             </div>
 
+            {/* Item Actions */}
+            <ItemActions itemId={item.id} itemName={item.name} />
+
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
-                <span>Publicerad {item.createdAt}</span>
+                <span>Publicerad {new Date(item.created_at).toLocaleDateString('sv-SE')}</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Description */}
-        <div className="mt-12">
-          <Card>
-            <CardContent className="p-6">
-              <h2 className="text-2xl font-bold mb-4">Beskrivning</h2>
-              <div className="prose max-w-none">
-                <p className="text-muted-foreground mb-4">
-                  {item.description}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-
-
-
         {/* Related Items */}
-        <div className="mt-12">
-          <h2 className="text-2xl font-bold mb-6">Liknande produkter</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mockItems.filter(i => i.id !== item.id).slice(0, 3).map((relatedItem) => (
-              <Link key={relatedItem.id} href={`/item/${relatedItem.id}`}>
-                <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-                  <CardContent className="p-0">
-                    <div className="aspect-square bg-gradient-to-br from-lime-100 to-yellow-100 relative overflow-hidden">
-                      <ItemImage
-                        src={relatedItem.image}
-                        alt={relatedItem.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="p-4">
-                      <h3 className="font-medium mb-2 line-clamp-2">{relatedItem.name}</h3>
-                      <div className="flex items-center justify-between">
-                        <span className="text-lime-600 font-semibold">{formatCurrency(relatedItem.value)}</span>
-                        <span className="text-sm text-muted-foreground">{relatedItem.location}</span>
+        {relatedItems.length > 0 && (
+          <div className="mt-12">
+            <h2 className="text-2xl font-bold mb-6">Liknande produkter</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {relatedItems.map((relatedItem) => (
+                <Link key={relatedItem.id} href={`/item/${relatedItem.id}`}>
+                  <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                    <CardContent className="p-0">
+                      <div className="aspect-square bg-gradient-to-br from-lime-100 to-yellow-100 relative overflow-hidden">
+                        <ItemImage
+                          src={relatedItem.photo_url || '/placeholder-image.jpg'}
+                          alt={relatedItem.name}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
+                      <div className="p-4">
+                        <h3 className="font-medium mb-2 line-clamp-2">{relatedItem.name}</h3>
+                        <div className="flex items-center justify-between">
+                          <span className="text-lime-600 font-semibold">{formatCurrency(relatedItem.value)}</span>
+                          <span className="text-sm text-muted-foreground">{relatedItem.location}</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </main>
     </div>
   );

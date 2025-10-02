@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Item } from '@/data/mock-items';
+import { Item } from '@/lib/supabase';
 import Link from 'next/link';
 import { MapPin, DollarSign } from 'lucide-react';
 
@@ -18,7 +18,7 @@ export function ItemCard({ item }: ItemCardProps) {
         <div className="aspect-square bg-gradient-to-br from-lime-100 to-yellow-100 flex items-center justify-center">
           <div className="w-full h-full bg-stone-100 relative overflow-hidden">
             <img
-              src={item.image}
+              src={item.photo_url || '/placeholder-image.jpg'}
               alt={item.name}
               className="w-full h-full object-cover"
               onError={(e) => {
@@ -46,7 +46,7 @@ export function ItemCard({ item }: ItemCardProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1 text-lime-600 font-semibold">
               <DollarSign className="w-4 h-4" />
-              <span>{item.value}</span>
+              <span>{item.value || 'Ej specificerat'}</span>
             </div>
 
             <Button size="sm" variant="outline" className="text-xs">
