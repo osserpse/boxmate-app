@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useCallback, useEffect } from 'react';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Upload, Camera, X, Image as ImageIcon } from 'lucide-react';
@@ -172,10 +173,12 @@ export function FileUpload({ onFilesChange, initialFiles = [], className }: File
               <div className="grid grid-cols-4 gap-2">
                 {files.map((uploadedFile, index) => (
                   <div key={`${uploadedFile.file.name}-${index}`} className="aspect-square bg-stone-100 rounded-lg relative group overflow-hidden">
-                    <img
+                    <Image
                       src={uploadedFile.preview}
                       alt={`Preview ${index + 1}`}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
+                      unoptimized
                     />
 
                     {/* Remove Button */}

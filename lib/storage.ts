@@ -42,15 +42,13 @@ export async function uploadFiles(files: File[]): Promise<{ success: boolean; ur
         }
 
         // Get public URL
-        const { error: urlError } = await supabase.storage
+        const { data: { publicUrl } } = supabase.storage
           .from('item-photos')
           .getPublicUrl(fileName)
 
-        if (urlError || !supabase.storage.from('item-photos').getPublicUrl(fileName).data.publicUrl) {
+        if (!publicUrl) {
           throw new Error(`Misslyckades att få URL för ${file.name}`)
         }
-
-        const publicUrl = supabase.storage.from('item-photos').getPublicUrl(fileName).data.publicUrl
         urls.push(publicUrl)
 
       } catch (error) {
@@ -104,3 +102,11 @@ export async function deleteFiles(urls: string[]): Promise<{ success: boolean; e
     }
 
     return { success: true }
+  } catch (error) {
+    console.error('deleteFiles error:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Okänt fel uppstod vid borttagning'
+    }
+  }
+}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -173,10 +174,11 @@ export function EditItemForm({
               <div className="grid grid-cols-4 gap-2 mb-4">
                 {currentPhotos.map((photoUrl, i) => (
                   <div key={i} className="aspect-square bg-stone-100 rounded-lg relative overflow-hidden">
-                    <img
+                    <Image
                       src={photoUrl}
                       alt={`Befintligt foto ${i + 1}`}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
                     />
                   </div>
                 ))}

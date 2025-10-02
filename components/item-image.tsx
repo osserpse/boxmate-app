@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+
 interface ItemImageProps {
   src: string;
   alt: string;
@@ -9,10 +11,11 @@ interface ItemImageProps {
 export function ItemImage({src, alt, className = ''}: ItemImageProps) {
   return (
     <div className="relative w-full h-full">
-      <img
+      <Image
         src={src}
         alt={alt}
-        className={`${className} w-full h-full`}
+        fill
+        className={className}
         onError={(e) => {
           const target = e.target as HTMLImageElement;
           target.style.display = 'none';

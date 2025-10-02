@@ -72,7 +72,7 @@ export function ItemActions({
             <DialogHeader>
               <DialogTitle>Redigera produkt</DialogTitle>
               <DialogDescription>
-                Uppdatera information för "{itemName}"
+                Uppdatera information för &ldquo;{itemName}&rdquo;
               </DialogDescription>
             </DialogHeader>
             <EditItemForm
@@ -108,7 +108,7 @@ export function ItemActions({
             <DialogHeader>
               <DialogTitle>Ta bort produkt</DialogTitle>
               <DialogDescription>
-                Är du säker på att du vill ta bort "{itemName}"? Denna åtgärd kan inte ångras.
+                Är du säker på att du vill ta bort &ldquo;{itemName}&rdquo;? Denna åtgärd kan inte ångras.
               </DialogDescription>
             </DialogHeader>
             <div className="flex gap-3 pt-4">
@@ -119,8 +119,8 @@ export function ItemActions({
               </DialogTrigger>
               <Button
                 onClick={handleDelete}
-                variant="destructive"
-                className="flex-1"
+                variant="outline"
+                className="flex-1 text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
                 disabled={isDeleting}
               >
                 {isDeleting ? 'Tar bort...' : 'Ta bort'}

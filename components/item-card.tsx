@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Item } from '@/lib/supabase';
 import Link from 'next/link';
 import { MapPin, DollarSign } from 'lucide-react';
+import Image from 'next/image';
 
 interface ItemCardProps {
   item: Item;
@@ -17,10 +18,11 @@ export function ItemCard({ item }: ItemCardProps) {
         {/* Image placeholder */}
         <div className="aspect-square bg-gradient-to-br from-lime-100 to-yellow-100 flex items-center justify-center">
           <div className="w-full h-full bg-stone-100 relative overflow-hidden">
-            <img
+            <Image
               src={item.photo_url || '/placeholder-image.jpg'}
               alt={item.name}
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
                 target.style.display = 'none';
