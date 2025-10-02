@@ -1,13 +1,13 @@
 import { Navigation } from '@/components/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { mockItems } from '@/data/mock-items';
-import { MapPin, DollarSign, User, Calendar, Phone, Mail } from 'lucide-react';
+import { mockItems, formatCurrency } from '@/data/mock-items';
+import { MapPin, User, Calendar, Phone, Mail, MessageCircle, Heart, Share2, ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ItemImage } from '@/components/item-image';
 import { ItemCard } from '@/components/item-card';
-
+import { Separator } from '@/components/ui/separator';
 interface ItemDetailPageProps {
   params: {
     id: string;
@@ -35,70 +35,64 @@ export default function ItemDetailPage({ params }: ItemDetailPageProps) {
           <span className="text-stone-900">{item.name}</span>
         </nav>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Image Gallery */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           <div className="space-y-4">
-            <div className="aspect-square bg-gradient-to-br from-lime-100 to-yellow-100 rounded-xl overflow-hidden">
-              <ItemImage
-                src={item.image}
+            <div className="aspect-square rounded-2xl overflow-hidden bg-muted shadow-lg">
+              <img
+                src={item.photo}
                 alt={item.name}
                 className="w-full h-full object-cover"
               />
             </div>
 
-            {/* Thumbnail gallery (placeholder) */}
-            <div className="grid grid-cols-4 gap-2">
-              {[1, 2, 3, 4].map((index) => (
-                <div key={index} className="aspect-square bg-stone-200 rounded-lg cursor-pointer hover:ring-2 hover:ring-lime-500 transition-all" />
+            <div className="grid grid-cols-3 gap-3">
+              {[1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="aspect-square rounded-xl overflow-hidden bg-muted/50 border border-border cursor-pointer hover:opacity-80 transition-opacity"
+                >
+                  <img
+                    src={item.photo}
+                    alt={`${item.name} view ${i}`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
               ))}
             </div>
           </div>
 
-          {/* Item Details */}
           <div className="space-y-6">
-            {/* Header with title and action buttons */}
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <h1 className="text-3xl font-bold text-stone-900 mb-2">{item.name}</h1>
-                <div className="flex items-center gap-1 text-muted-foreground">
-                  <MapPin className="w-4 h-4" />
-                  <span>{item.location}</span>
+            <div>
+              <div className="flex items-start justify-between gap-4 mb-4">
+                <h1 className="text-4xl font-semibold text-foreground">{item.name}</h1>
+                <div className="flex gap-2">
+                  <Button size="icon" variant="outline" className="rounded-full">
+                    <Heart className="w-5 h-5" />
+                  </Button>
+                  <Button size="icon" variant="outline" className="rounded-full">
+                    <Share2 className="w-5 h-5" />
+                  </Button>
                 </div>
               </div>
-              {/* Action icons */}
-              <div className="flex gap-2 ml-4">
-                <Button size="icon" variant="outline" className="w-10 h-10">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-                  </svg>
-                </Button>
-                <Button size="icon" variant="outline" className="w-10 h-10">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3 3 0 000-2.075l4.94-2.47A3 3 0 0015 8z" />
-                  </svg>
-                </Button>
+              <div className="flex items-center gap-2 text-muted-foreground mb-4">
+                <MapPin className="w-5 h-5" />
+                <span className="text-lg">{item.location}</span>
+              </div>
+              <div className="flex items-baseline gap-2">
+                <span className="text-5xl font-bold text-primary">
+                  {formatCurrency(item.value)}
+                </span>
               </div>
             </div>
 
-            {/* Price */}
-            <div className="bg-gradient-to-r from-lime-50 to-yellow-50 rounded-lg p-6 border border-lime-200">
-              <div className="flex items-center gap-2 mb-2">
-                <DollarSign className="w-6 h-6 text-lime-600" />
-                <span className="text-3xl font-bold text-lime-600">{item.value}</span>
-              </div>
-              <p className="text-sm text-muted-foreground">Negotiable • Make an offer!</p>
-            </div>
+            <Separator />
 
-            {/* Divider */}
-            <hr className="border-stone-200" />
-
-            {/* Description */}
             <div>
-              <h3 className="text-lg font-semibold text-stone-900 mb-3">Description</h3>
-              <p className="text-stone-600 leading-relaxed">
-                {item.description}
-              </p>
+              <h2 className="text-xl font-semibold text-foreground mb-3">Description</h2>
+              <p className="text-muted-foreground leading-relaxed">{item.description}</p>
             </div>
+
+            <Separator />
 
             {/* Seller Info */}
             <Card className="bg-stone-50 border-stone-200">
@@ -122,13 +116,20 @@ export default function ItemDetailPage({ params }: ItemDetailPageProps) {
             </Card>
 
             {/* Action Buttons */}
-            <div className="space-y-3">
-              <Button size="lg" className="w-full bg-lime-500 hover:bg-lime-600">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Button size="lg" className="flex-1 gap-2 shadow-md hover:shadow-lg transition-shadow">
                 Buy Now
               </Button>
-              <Button size="lg" variant="outline" className="w-full">
+              <Button size="lg" variant="outline" className="flex-1">
                 Make Offer
               </Button>
+            </div>
+
+            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                <span>Posted {item.createdAt}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -152,6 +153,9 @@ export default function ItemDetailPage({ params }: ItemDetailPageProps) {
           </Card>
         </div>
 
+
+
+
         {/* Related Items */}
         <div className="mt-12">
           <h2 className="text-2xl font-bold mb-6">Similar Items</h2>
@@ -170,7 +174,7 @@ export default function ItemDetailPage({ params }: ItemDetailPageProps) {
                     <div className="p-4">
                       <h3 className="font-medium mb-2 line-clamp-2">{relatedItem.name}</h3>
                       <div className="flex items-center justify-between">
-                        <span className="text-lime-600 font-semibold">${relatedItem.value}</span>
+                        <span className="text-lime-600 font-semibold">{formatCurrency(relatedItem.value)}</span>
                         <span className="text-sm text-muted-foreground">{relatedItem.location}</span>
                       </div>
                     </div>
