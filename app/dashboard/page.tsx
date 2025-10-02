@@ -19,6 +19,20 @@ async function getItems(): Promise<Item[]> {
     return []
   }
 
+  // Parse photos JSON if it exists for each item
+  if (items) {
+    items.forEach(item => {
+      if (item.photos && typeof item.photos === 'string') {
+        try {
+          item.photos = JSON.parse(item.photos)
+        } catch (error) {
+          console.error('Error parsing photos JSON:', error)
+          item.photos = []
+        }
+      }
+    })
+  }
+
   return items || []
 }
 

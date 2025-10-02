@@ -61,6 +61,7 @@ export interface Item {
   description?: string
   value?: number
   photo_url?: string
+  photos?: string[] // Array of photo URLs
   created_at: string
 }
 

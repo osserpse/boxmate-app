@@ -29,6 +29,16 @@ async function getItem(id: string): Promise<Item | null> {
     return null
   }
 
+  // Parse photos JSON if it exists
+  if (item && item.photos && typeof item.photos === 'string') {
+    try {
+      item.photos = JSON.parse(item.photos)
+    } catch (error) {
+      console.error('Error parsing photos JSON:', error)
+      item.photos = []
+    }
+  }
+
   return item
 }
 
@@ -60,6 +70,12 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
     notFound();
   }
 
+  // Prepare photo arrays for display
+  const allPhotos = item.photos && Array.isArray(item.photos) ? item.photos :
+                   (item.photo_url ? [item.photo_url] : []);
+  const mainPhoto = allPhotos[0] || '/placeholder-image.jpg';
+  const thumbnailPhotos = allPhotos.slice(0, 3); // Show up to 3 thumbnails
+
   const formatCurrency = (value: number | null | undefined): string => {
     if (!value) return 'Ej specificerat';
     return new Intl.NumberFormat('sv-SE', {
@@ -88,21 +104,21 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
           <div className="space-y-4">
             <div className="aspect-square rounded-2xl overflow-hidden bg-muted shadow-lg">
               <ItemImage
-                src={item.photo_url || '/placeholder-image.jpg'}
+                src={mainPhoto}
                 alt={item.name}
                 className="w-full h-full object-cover"
               />
             </div>
 
             <div className="grid grid-cols-3 gap-3">
-              {[1, 2, 3].map((i) => (
+              {thumbnailPhotos.map((photo, i) => (
                 <div
                   key={i}
                   className="aspect-square rounded-xl overflow-hidden bg-muted/50 border border-border cursor-pointer hover:opacity-80 transition-opacity"
                 >
                   <ItemImage
-                    src={item.photo_url || '/placeholder-image.jpg'}
-                    alt={`${item.name} view ${i}`}
+                    src={photo}
+                    alt={`${item.name} view ${i + 1}`}
                     className="w-full h-full object-cover"
                   />
                 </div>

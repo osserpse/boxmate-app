@@ -35,10 +35,10 @@ export async function addItem(data: AddItemRequest) {
     console.log('Supabase client created successfully');
 
     // Use pre-uploaded photo URLs (uploaded from client side)
-    let photo_urls: string[] = data.photoUrls || []
+    const photo_urls: string[] = data.photoUrls || []
 
-    // For now, we'll store the first photo URL in the existing photo_url field
-    // In the future, we could extend the database to support multiple photos
+    // Store all photo URLs as JSON array
+    const photos_json = photo_urls.length > 0 ? JSON.stringify(photo_urls) : null
     const primary_photo_url = photo_urls.length > 0 ? photo_urls[0] : undefined
 
     console.log('Inserting item into database:', {
@@ -46,7 +46,8 @@ export async function addItem(data: AddItemRequest) {
       location: data.location,
       description: data.description,
       value: data.value,
-      photo_url: primary_photo_url
+      photo_url: primary_photo_url,
+      photos: photos_json
     });
 
     // Insert item into database
@@ -57,7 +58,8 @@ export async function addItem(data: AddItemRequest) {
         location: data.location,
         description: data.description,
         value: data.value,
-        photo_url: primary_photo_url
+        photo_url: primary_photo_url,
+        photos: photos_json
       })
       .select()
       .single()
