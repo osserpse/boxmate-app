@@ -8,42 +8,46 @@ export interface AddItemData {
   location: string
   description?: string
   value?: number
-  photo?: File
+  photos?: File[]
 }
 
-export async function addItem(data: AddItemData) {
+// Separate interface for file data that can be passed to server actions
+export interface FileData {
+  name: string
+  type: string
+  size: number
+  data: string // base64 encoded
+}
+
+export interface AddItemRequest {
+  name: string
+  location: string
+  description?: string
+  value?: number
+  photoUrls?: string[]
+}
+
+export async function addItem(data: AddItemRequest) {
   try {
+    console.log('addItem called with:', data);
+    console.log('Creating Supabase client...');
     const supabase = createClient()
+    console.log('Supabase client created successfully');
 
-    // Handle photo upload first if provided
-    let photo_url: string | undefined = undefined
+    // Use pre-uploaded photo URLs (uploaded from client side)
+    let photo_urls: string[] = data.photoUrls || []
 
-    if (data.photo) {
-      // Generate unique filename
-      const fileExt = data.photo.name.split('.').pop()
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
+    // For now, we'll store the first photo URL in the existing photo_url field
+    // In the future, we could extend the database to support multiple photos
+    const primary_photo_url = photo_urls.length > 0 ? photo_urls[0] : undefined
 
-      // Convert File to ArrayBuffer
-      const arrayBuffer = await data.photo.arrayBuffer()
-      const { error: uploadError } = await supabase.storage
-        .from('item-photos')
-        .upload(fileName, arrayBuffer, {
-          contentType: data.photo.type,
-          cacheControl: '3600',
-          upsert: false
-        })
-
-      if (uploadError) {
-        throw new Error(`Foto upload misslyckades: ${uploadError.message}`)
-      }
-
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('item-photos')
-        .getPublicUrl(fileName)
-
-      photo_url = publicUrl
-    }
+    console.log('Inserting item into database:', {
+      name: data.name,
+      location: data.location,
+      description: data.description,
+      value: data.value,
+      photo_url: primary_photo_url
+    });
 
     // Insert item into database
     const { data: newItem, error } = await supabase
@@ -53,14 +57,17 @@ export async function addItem(data: AddItemData) {
         location: data.location,
         description: data.description,
         value: data.value,
-        photo_url: photo_url
+        photo_url: primary_photo_url
       })
       .select()
       .single()
 
     if (error) {
+      console.error('Database error:', error);
       throw new Error(`Misslyckades att spara produkt: ${error.message}`)
     }
+
+    console.log('Successfully saved item:', newItem);
 
     // Revalidate dashboard to show new item
     revalidatePath('/dashboard')

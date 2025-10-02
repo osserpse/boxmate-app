@@ -6,8 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DialogClose } from '@/components/ui/dialog';
-import { Plus, Upload, X } from 'lucide-react';
+import { Plus, DollarSign } from 'lucide-react';
 import { addItem, AddItemData } from '@/lib/actions';
+import { FileUpload } from '@/components/file-upload';
 
 interface AddItemFormProps {
   onItemAdded: (item: any) => void;
@@ -18,30 +19,15 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
     name: '',
     description: '',
     value: '',
-    location: '',
-    photo: null as File | null
+    location: ''
   });
+  const [files, setFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const handleInputChange = (field: string, value: string | File | null) => {
+  const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (error) setError('');
-
-    if (field === 'photo' && value instanceof File) {
-      // Create preview URL
-      const previewUrl = URL.createObjectURL(value);
-      setImagePreview(previewUrl);
-    }
-  };
-
-  const removePhoto = () => {
-    setFormData(prev => ({ ...prev, photo: null }));
-    if (imagePreview) {
-      URL.revokeObjectURL(imagePreview);
-      setImagePreview(null);
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -62,7 +48,7 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
         location: formData.location,
         description: formData.description || undefined,
         value: formData.value ? parseFloat(formData.value) : undefined,
-        photo: formData.photo || undefined
+        photos: files.length > 0 ? files : undefined
       };
 
       const result = await addItem(addData);
@@ -77,14 +63,15 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
         };
 
         onItemAdded(transformedItem);
+
+        // Reset form
         setFormData({
           name: '',
           description: '',
           value: '',
-          location: '',
-          photo: null
+          location: ''
         });
-        setImagePreview(null);
+        setFiles([]);
       } else {
         setError(result.error || 'Något gick fel');
       }
@@ -96,57 +83,12 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      handleInputChange('photo', file);
-    }
-  };
-
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Photo Upload */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl">Foto</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {imagePreview ? (
-            <div className="relative">
-              <img
-                src={imagePreview}
-                alt="Preview"
-                className="w-full h-48 object-cover rounded-lg"
-              />
-              <button
-                type="button"
-                onClick={removePhoto}
-                className="absolute top-2 right-2 p-1 bg-red-500 hover:bg-red-600 text-white rounded-full"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-          ) : (
-            <div>
-              <input
-                type="file"
-                id="photo"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="hidden"
-              />
-              <label
-                htmlFor="photo"
-                className="border-2 border-dashed border-stone-300 rounded-lg p-8 text-center hover:border-lime-400 transition-colors cursor-pointer block"
-              >
-                <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-                <p className="font-medium text-stone-900 mb-1">Lägg till produktfoto</p>
-                <p className="text-sm text-muted-foreground">Klicka för att välja bild</p>
-              </label>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      <FileUpload
+        onFilesChange={setFiles}
+      />
 
       {/* Basic Information */}
 
@@ -198,14 +140,17 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
         <label htmlFor="value" className="block text-sm font-medium mb-2">
           Värde (kr)
         </label>
-        <Input
-          id="value"
-          type="number"
-          placeholder="0"
-          value={formData.value}
-          onChange={(e) => handleInputChange('value', e.target.value)}
-          className="h-11"
-        />
+        <div className="relative">
+          <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+          <Input
+            id="value"
+            type="number"
+            placeholder="0"
+            value={formData.value}
+            onChange={(e) => handleInputChange('value', e.target.value)}
+            className="h-11 pl-10"
+          />
+        </div>
       </div>
 
       {/* Error Message */}
