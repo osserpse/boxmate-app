@@ -149,6 +149,9 @@ export function EditItemForm({
         hyllplats: formData.hyllplats,
         description: formData.description || undefined,
         value: formData.value ? parseFloat(formData.value) : undefined,
+        category: formData.category,
+        subcategory: formData.subcategory,
+        condition: formData.condition,
         photoUrls: uploadedPhotoUrls.length > 0 ? uploadedPhotoUrls : undefined
       };
 

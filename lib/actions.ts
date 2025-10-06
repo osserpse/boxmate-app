@@ -11,6 +11,9 @@ export interface AddItemData {
   description?: string
   value?: number
   photos?: File[]
+  category?: string
+  subcategory?: string
+  condition?: string
 }
 
 // Separate interface for file data that can be passed to server actions
@@ -29,6 +32,9 @@ export interface AddItemRequest {
   description?: string
   value?: number
   photoUrls?: string[]
+  category?: string
+  subcategory?: string
+  condition?: string
 }
 
 export async function addItem(data: AddItemRequest) {
@@ -52,6 +58,9 @@ export async function addItem(data: AddItemRequest) {
       hyllplats: data.hyllplats,
       description: data.description,
       value: data.value,
+      category: data.category,
+      subcategory: data.subcategory,
+      condition: data.condition,
       photo_url: primary_photo_url,
       photos: photos_json
     });
@@ -66,6 +75,9 @@ export async function addItem(data: AddItemRequest) {
         hyllplats: data.hyllplats,
         description: data.description,
         value: data.value,
+        category: data.category,
+        subcategory: data.subcategory,
+        condition: data.condition,
         photo_url: primary_photo_url,
         photos: photos_json
       })
@@ -119,6 +131,9 @@ export async function updateItem(itemId: string, data: AddItemRequest) {
         hyllplats: data.hyllplats,
         description: data.description,
         value: data.value,
+        category: data.category,
+        subcategory: data.subcategory,
+        condition: data.condition,
         photo_url: entire_photo_url,
         photos: photos_json
       })

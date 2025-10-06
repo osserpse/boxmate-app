@@ -68,6 +68,9 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
         hyllplats: formData.hyllplats,
         description: formData.description || undefined,
         value: formData.value ? parseFloat(formData.value) : undefined,
+        category: formData.category,
+        subcategory: formData.subcategory,
+        condition: formData.condition,
         photos: files.length > 0 ? files : undefined
       };
 
