@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "migrate": "tsx scripts/migrate-mock-data.ts",
-    "import-csv": "tsx scripts/import-csv-items.ts"
+    "import-csv": "tsx scripts/import-csv-items.ts",
+    "fix-photos": "tsx scripts/fix-empty-photos.ts",
+    "test-dashboard": "tsx scripts/test-dashboard.ts"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",

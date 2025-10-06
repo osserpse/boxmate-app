@@ -6,11 +6,6 @@ const nextConfig = {
     },
   },
   images: {
-    domains: [
-      'ifmlvwtezadtafcgwspq.supabase.co',
-      '*.supabase.co',
-      'images.unsplash.com'
-    ],
     remotePatterns: [
       {
         protocol: 'https',

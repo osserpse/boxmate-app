@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -55,6 +55,7 @@ export function EditItemForm({
   const [files, setFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => {
@@ -68,10 +69,10 @@ export function EditItemForm({
     if (error) setError(null);
   };
 
-  const handleFilesChange = (selectedFiles: File[]) => {
+  const handleFilesChange = useCallback((selectedFiles: File[]) => {
     setFiles(selectedFiles);
     if (error) setError(null);
-  };
+  }, [error]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,7 +97,7 @@ export function EditItemForm({
     setIsLoading(true);
 
     try {
-      let uploadedPhotoUrls = [...currentPhotos]; // Keep existing photos
+      let uploadedPhotoUrls = [...(currentPhotos || [])]; // Keep existing photos
 
       // Upload new files to Supabase Storage first (client-side)
       if (files.length > 0) {
@@ -161,8 +162,14 @@ export function EditItemForm({
 
       if (result.success) {
         console.log('Success! Calling onUpdate callback');
-        onUpdate(); // Trigger parent refresh
         setFiles([]); // Clear files
+        setError(''); // Clear any previous errors
+        setIsSuccess(true); // Show success state
+
+        // Close modal after a brief success message
+        setTimeout(() => {
+          onUpdate(); // Trigger parent refresh and close modal
+        }, 1000);
       } else {
         console.error('updateItem failed:', result.error);
         setError(result.error || 'Något gick fel vid uppdatering');
@@ -207,21 +214,28 @@ export function EditItemForm({
         </div>
       )}
 
+      {isSuccess && (
+        <div className="bg-green-50 border border-green-200 text-green-700 p-3 rounded-lg">
+          ✅ Produkten har uppdaterats framgångsrikt!
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Current Photos Display */}
-        {currentPhotos.length > 0 && (
+        {currentPhotos && currentPhotos.length > 0 && (
           <Card>
             <CardHeader>
               <CardTitle className="text-xl">Befintliga foton</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-4 gap-2 mb-4">
-                {currentPhotos.map((photoUrl, i) => (
+                {(currentPhotos || []).map((photoUrl, i) => (
                   <div key={i} className="aspect-square bg-stone-100 rounded-lg relative overflow-hidden">
                     <Image
                       src={photoUrl}
                       alt={`Befintligt foto ${i + 1}`}
                       fill
+                      sizes="(max-width: 768px) 25vw, 200px"
                       className="object-cover"
                     />
                   </div>
@@ -380,11 +394,15 @@ export function EditItemForm({
           </CardContent>
         </Card>
 
-        <Button type="submit" size="lg" className="w-full bg-lime-500 hover:bg-lime-600" disabled={isLoading}>
+        <Button type="submit" size="lg" className="w-full bg-lime-500 hover:bg-lime-600" disabled={isLoading || isSuccess}>
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Sparar ändringar...
+            </>
+          ) : isSuccess ? (
+            <>
+              ✅ Uppdaterad!
             </>
           ) : (
             'Uppdatera produkt'

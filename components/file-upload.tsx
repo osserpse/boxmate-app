@@ -177,6 +177,7 @@ export function FileUpload({ onFilesChange, initialFiles = [], className }: File
                       src={uploadedFile.preview}
                       alt={`Preview ${index + 1}`}
                       fill
+                      sizes="(max-width: 768px) 25vw, 200px"
                       className="object-cover"
                       unoptimized
                     />

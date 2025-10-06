@@ -240,6 +240,22 @@
    yarn test:coverage
    ```
 
+## Development Workflow
+
+1. **Localhost Process Management**
+   - Always kill localhost processes after testing
+   - Use `pkill -f "next dev"` to stop Next.js dev server
+   - Use `lsof -ti:3000,3001 | xargs kill -9` to force kill ports
+   - Check ports with `lsof -i:3000,3001` before starting dev server
+   - Leave ports clean for user's own development
+
+2. **Testing Protocol**
+   - Run tests and verify functionality
+   - Clean up any background processes
+   - Ensure ports 3000 and 3001 are free
+   - Document any issues found
+   - Provide clear status updates
+
 ## Goals
 
 1. Primary

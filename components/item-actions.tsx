@@ -37,7 +37,10 @@ export function ItemActions({
 
   const handleEditComplete = () => {
     setIsEditDialogOpen(false);
-    router.refresh(); // Refresh the page to show updated data
+    // Small delay to ensure the modal closes before refresh
+    setTimeout(() => {
+      router.refresh(); // Refresh the page to show updated data
+    }, 100);
   };
 
   const handleDelete = async () => {
@@ -87,7 +90,7 @@ export function ItemActions({
               currentHyllplats={itemHyllplats}
               currentDescription={itemDescription}
               currentValue={itemValue}
-              currentPhotos={itemPhotos}
+              currentPhotos={itemPhotos || []}
               onUpdate={handleEditComplete}
             />
           </DialogContent>

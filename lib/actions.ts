@@ -76,7 +76,7 @@ export async function addItem(data: AddItemRequest) {
         description: data.description,
         value: data.value,
         category: data.category,
-        subcategory: data.subcategory,
+        subcategory: data.category === 'electronics' ? data.subcategory : null,
         condition: data.condition,
         photo_url: primary_photo_url,
         photos: photos_json
@@ -132,7 +132,7 @@ export async function updateItem(itemId: string, data: AddItemRequest) {
         description: data.description,
         value: data.value,
         category: data.category,
-        subcategory: data.subcategory,
+        subcategory: data.category === 'electronics' ? data.subcategory : null,
         condition: data.condition,
         photo_url: entire_photo_url,
         photos: photos_json

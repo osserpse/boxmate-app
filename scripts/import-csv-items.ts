@@ -57,10 +57,15 @@ async function importItemsFromCSV(csvFilePath: string): Promise<ImportResult> {
     const supabase = createClient(supabaseUrl, supabaseAnonKey)
     const items: CSVItem[] = []
 
+    // Auto-detect delimiter by reading first line
+    const firstLine = fs.readFileSync(csvFilePath, 'utf8').split('\n')[0]
+    const delimiter = firstLine.includes(';') ? ';' : ','
+    console.log(`Detected delimiter: ${delimiter === ';' ? 'semicolon' : 'comma'}`)
+
     // Read and parse CSV file
     await new Promise<void>((resolve, reject) => {
       fs.createReadStream(csvFilePath)
-        .pipe(csv())
+        .pipe(csv({ separator: delimiter }))
         .on('data', (row: CSVItem) => {
           items.push(row)
         })
@@ -141,7 +146,7 @@ async function importItemsFromCSV(csvFilePath: string): Promise<ImportResult> {
           hyllplats: item.hyllplats?.trim() || null,
           description: item.description?.trim() || null,
           value: value || null,
-          photo_url: item.photo_url?.trim() || null,
+          photo_url: item.photo_url?.trim() && item.photo_url.trim() !== '' ? item.photo_url.trim() : null,
           photos: photos ? JSON.stringify(photos) : null,
           category: item.category?.trim() || null,
           subcategory: item.subcategory?.trim() || null,

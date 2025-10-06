@@ -18,22 +18,25 @@ export function ItemCard({ item }: ItemCardProps) {
         {/* Image placeholder */}
         <div className="aspect-square bg-gradient-to-br from-lime-100 to-yellow-100 flex items-center justify-center">
           <div className="w-full h-full bg-stone-100 relative overflow-hidden">
-            <Image
-              src={item.photo_url || '/placeholder-image.jpg'}
-              alt={item.name}
-              fill
-              className="object-cover"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.style.display = 'none';
-                const placeholder = target.parentElement?.querySelector('.placeholder') as HTMLElement;
-                if (placeholder) placeholder.style.display = 'flex';
-              }}
-            />
-            <div className="placeholder absolute inset-0 bg-stone-100 flex items-center justify-center text-stone-400 text-xs font-medium"
-                 style={{ display: 'none' }}>
-              {item.name}
-            </div>
+            {item.photo_url ? (
+              <Image
+                src={item.photo_url}
+                alt={item.name}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  const placeholder = target.parentElement?.querySelector('.placeholder') as HTMLElement;
+                  if (placeholder) placeholder.style.display = 'flex';
+                }}
+              />
+            ) : (
+              <div className="placeholder absolute inset-0 bg-stone-100 flex items-center justify-center text-stone-400 text-xs font-medium">
+                {item.name}
+              </div>
+            )}
           </div>
         </div>
 

@@ -57,6 +57,20 @@ async function getRelatedItems(excludeId: string): Promise<Item[]> {
     return []
   }
 
+  // Parse photos JSON for each item if it exists
+  if (items) {
+    items.forEach(item => {
+      if (item.photos && typeof item.photos === 'string') {
+        try {
+          item.photos = JSON.parse(item.photos)
+        } catch (error) {
+          console.error('Error parsing photos JSON:', error)
+          item.photos = []
+        }
+      }
+    })
+  }
+
   return items || []
 }
 
@@ -73,7 +87,7 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
   // Prepare photo arrays for display
   const allPhotos = item.photos && Array.isArray(item.photos) ? item.photos :
                    (item.photo_url ? [item.photo_url] : []);
-  const mainPhoto = allPhotos[0] || '/placeholder-image.jpg';
+  const mainPhoto = allPhotos[0] || null;
   const thumbnailPhotos = allPhotos.slice(0, 3); // Show up to 3 thumbnails
 
   const formatCurrency = (value: number | null | undefined): string => {
@@ -142,6 +156,7 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
                 src={mainPhoto}
                 alt={item.name}
                 className="absolute inset-0 object-cover"
+                priority={true}
               />
             </div>
 
@@ -290,7 +305,7 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
                     <CardContent className="p-0">
                       <div className="aspect-square bg-gradient-to-br from-lime-100 to-yellow-100 relative overflow-hidden">
                         <ItemImage
-                          src={relatedItem.photo_url || '/placeholder-image.jpg'}
+                          src={relatedItem.photo_url || null}
                           alt={relatedItem.name}
                           className="w-full h-full object-cover"
                         />

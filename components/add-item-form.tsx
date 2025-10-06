@@ -80,8 +80,8 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
         // Transform Supabase item to match ItemCard expected format
         const transformedItem = {
           ...result.item,
-          image: result.item.photo_url || '/placeholder-image.jpg',
-          photo: result.item.photo_url || '/placeholder-image.jpg',
+          image: result.item.photo_url || null,
+          photo: result.item.photo_url || null,
           createdAt: 'Nu'
         };
 
