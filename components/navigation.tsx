@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, User, ShoppingBag } from 'lucide-react';
+import { Search, ShoppingBag } from 'lucide-react';
+import { SettingsDropdown } from '@/components/settings-dropdown';
 
 export function Navigation() {
   return (
@@ -43,10 +44,8 @@ export function Navigation() {
               </Button>
             </Link>
 
-            {/* Profile placeholder */}
-            <Button variant="outline" size="icon" className="relative">
-              <User className="w-4 h-4" />
-            </Button>
+            {/* Settings Dropdown */}
+            <SettingsDropdown />
           </div>
         </div>
       </div>

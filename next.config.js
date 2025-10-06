@@ -8,7 +8,8 @@ const nextConfig = {
   images: {
     domains: [
       'ifmlvwtezadtafcgwspq.supabase.co',
-      '*.supabase.co'
+      '*.supabase.co',
+      'images.unsplash.com'
     ],
     remotePatterns: [
       {
@@ -16,6 +17,12 @@ const nextConfig = {
         hostname: '*.supabase.co',
         port: '',
         pathname: '/storage/v1/object/public/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**',
       },
     ],
   },
