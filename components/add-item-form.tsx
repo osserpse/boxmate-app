@@ -19,14 +19,23 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
     name: '',
     description: '',
     value: '',
-    location: ''
+    location: '',
+    category: 'electronics',
+    subcategory: ''
   });
   const [files, setFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => {
+      const newData = { ...prev, [field]: value };
+      // Reset subcategory when category changes
+      if (field === 'category') {
+        newData.subcategory = '';
+      }
+      return newData;
+    });
     if (error) setError('');
   };
 
@@ -36,6 +45,11 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
     // Validation
     if (!formData.name.trim() || !formData.location.trim()) {
       setError('Namn och plats måste fyllas i');
+      return;
+    }
+
+    if (formData.category === 'electronics' && !formData.subcategory) {
+      setError('Underkategori måste väljas för elektronik');
       return;
     }
 
@@ -69,7 +83,9 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
           name: '',
           description: '',
           value: '',
-          location: ''
+          location: '',
+          category: 'electronics',
+          subcategory: ''
         });
         setFiles([]);
       } else {
@@ -82,6 +98,18 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
       setIsLoading(false);
     }
   };
+
+  const categories = [
+    { value: 'business', label: 'Affärsverksamhet (företag)' },
+    { value: 'electronics', label: 'Elektronik' },
+    { value: 'other', label: 'Övrigt' }
+  ];
+
+  const electronicsSubcategories = [
+    { value: 'computers-gaming', label: 'Datorer och TV-spel' },
+    { value: 'audio-video', label: 'Ljud och Bild' },
+    { value: 'phones-accessories', label: 'Telefoner & tillbehör' }
+  ];
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -105,6 +133,47 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
           className="h-11"
         />
       </div>
+
+      {/* Category */}
+      <div>
+        <label htmlFor="category" className="block text-sm font-medium mb-2">
+          Kategori *
+        </label>
+        <select
+          id="category"
+          value={formData.category}
+          onChange={(e) => handleInputChange('category', e.target.value)}
+          className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {categories.map((cat) => (
+            <option key={cat.value} value={cat.value}>
+              {cat.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Subcategory - only show for electronics */}
+      {formData.category === 'electronics' && (
+        <div>
+          <label htmlFor="subcategory" className="block text-sm font-medium mb-2">
+            Underkategori *
+          </label>
+          <select
+            id="subcategory"
+            value={formData.subcategory}
+            onChange={(e) => handleInputChange('subcategory', e.target.value)}
+            className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <option value="">Välj underkategori</option>
+            {electronicsSubcategories.map((subcat) => (
+              <option key={subcat.value} value={subcat.value}>
+                {subcat.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {/* Location */}
       <div>

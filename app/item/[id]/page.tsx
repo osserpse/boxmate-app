@@ -86,6 +86,24 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
     }).format(value);
   };
 
+  const getCategoryLabel = (category: string): string => {
+    const categories: { [key: string]: string } = {
+      'business': 'Affärsverksamhet (företag)',
+      'electronics': 'Elektronik',
+      'other': 'Övrigt'
+    };
+    return categories[category] || category;
+  };
+
+  const getSubcategoryLabel = (subcategory: string): string => {
+    const subcategories: { [key: string]: string } = {
+      'computers-gaming': 'Datorer och TV-spel',
+      'audio-video': 'Ljud och Bild',
+      'phones-accessories': 'Telefoner & tillbehör'
+    };
+    return subcategories[subcategory] || subcategory;
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -95,7 +113,13 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
           <Link href="/dashboard" className="hover:text-lime-600">Översikt</Link>
           <span>→</span>
-          <span>Elektronik</span>
+          <span>{getCategoryLabel(item.category || 'other')}</span>
+          {item.category === 'electronics' && item.subcategory && (
+            <>
+              <span>→</span>
+              <span>{getSubcategoryLabel(item.subcategory)}</span>
+            </>
+          )}
           <span>→</span>
           <span className="text-stone-900">{item.name}</span>
         </nav>
@@ -147,6 +171,21 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
                 <span className="text-5xl font-bold text-primary">
                   {formatCurrency(item.value)}
                 </span>
+              </div>
+
+              {/* Category Information */}
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <span className="text-sm">
+                  <span className="font-medium">Kategori:</span> {getCategoryLabel(item.category || 'other')}
+                </span>
+                {item.category === 'electronics' && item.subcategory && (
+                  <>
+                    <span>•</span>
+                    <span className="text-sm">
+                      <span className="font-medium">Underkategori:</span> {getSubcategoryLabel(item.subcategory)}
+                    </span>
+                  </>
+                )}
               </div>
             </div>
 

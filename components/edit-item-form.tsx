@@ -18,6 +18,8 @@ interface EditItemFormProps {
   currentDescription: string;
   currentValue?: number;
   currentPhotos?: string[];
+  currentCategory?: string;
+  currentSubcategory?: string;
   onUpdate: () => void;
 }
 
@@ -28,6 +30,8 @@ export function EditItemForm({
   currentDescription,
   currentValue,
   currentPhotos = [],
+  currentCategory = 'electronics',
+  currentSubcategory = '',
   onUpdate
 }: EditItemFormProps) {
   const [formData, setFormData] = useState({
@@ -35,13 +39,22 @@ export function EditItemForm({
     location: currentLocation,
     description: currentDescription,
     value: currentValue?.toString() || '',
+    category: currentCategory,
+    subcategory: currentSubcategory
   });
   const [files, setFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => {
+      const newData = { ...prev, [field]: value };
+      // Reset subcategory when category changes
+      if (field === 'category') {
+        newData.subcategory = '';
+      }
+      return newData;
+    });
     if (error) setError(null);
   };
 
@@ -63,6 +76,10 @@ export function EditItemForm({
     }
     if (!formData.location.trim()) {
       setError('Plats är obligatorisk');
+      return;
+    }
+    if (formData.category === 'electronics' && !formData.subcategory) {
+      setError('Underkategori måste väljas för elektronik');
       return;
     }
 
@@ -144,6 +161,18 @@ export function EditItemForm({
     }
   };
 
+  const categories = [
+    { value: 'business', label: 'Affärsverksamhet (företag)' },
+    { value: 'electronics', label: 'Elektronik' },
+    { value: 'other', label: 'Övrigt' }
+  ];
+
+  const electronicsSubcategories = [
+    { value: 'computers-gaming', label: 'Datorer och TV-spel' },
+    { value: 'audio-video', label: 'Ljud och Bild' },
+    { value: 'phones-accessories', label: 'Telefoner & tillbehör' }
+  ];
+
   return (
     <div className="space-y-6">
       {/* Warning Message */}
@@ -212,6 +241,45 @@ export function EditItemForm({
                 required
               />
             </div>
+
+            <div>
+              <label htmlFor="category" className="block text-sm font-medium mb-2">
+                Kategori *
+              </label>
+              <select
+                id="category"
+                value={formData.category}
+                onChange={(e) => handleInputChange('category', e.target.value)}
+                className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {categories.map((cat) => (
+                  <option key={cat.value} value={cat.value}>
+                    {cat.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {formData.category === 'electronics' && (
+              <div>
+                <label htmlFor="subcategory" className="block text-sm font-medium mb-2">
+                  Underkategori *
+                </label>
+                <select
+                  id="subcategory"
+                  value={formData.subcategory}
+                  onChange={(e) => handleInputChange('subcategory', e.target.value)}
+                  className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <option value="">Välj underkategori</option>
+                  {electronicsSubcategories.map((subcat) => (
+                    <option key={subcat.value} value={subcat.value}>
+                      {subcat.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div>
               <label htmlFor="description" className="block text-sm font-medium mb-2">

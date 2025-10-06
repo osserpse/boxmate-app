@@ -22,6 +22,7 @@ export function SellForm({ itemId }: SellFormProps) {
     value: '',
     location: '',
     category: 'electronics',
+    subcategory: '',
     condition: 'good',
     negotiable: false
   });
@@ -30,7 +31,14 @@ export function SellForm({ itemId }: SellFormProps) {
   const [error, setError] = useState('');
 
   const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => {
+      const newData = { ...prev, [field]: value };
+      // Reset subcategory when category changes
+      if (field === 'category') {
+        newData.subcategory = '';
+      }
+      return newData;
+    });
     if (error) setError('');
   };
 
@@ -44,6 +52,11 @@ export function SellForm({ itemId }: SellFormProps) {
     // Validation
     if (!formData.name.trim() || !formData.location.trim()) {
       setError('Namn och plats måste fyllas i');
+      return;
+    }
+
+    if (formData.category === 'electronics' && !formData.subcategory) {
+      setError('Underkategori måste väljas för elektronik');
       return;
     }
 
@@ -131,13 +144,15 @@ export function SellForm({ itemId }: SellFormProps) {
   };
 
   const categories = [
+    { value: 'business', label: 'Affärsverksamhet (företag)' },
     { value: 'electronics', label: 'Elektronik' },
-    { value: 'clothing', label: 'Kläder' },
-    { value: 'books', label: 'Böcker' },
-    { value: 'sports', label: 'Sport' },
-    { value: 'home', label: 'Hem & trädgård' },
-    { value: 'toys', label: 'Leksaker' },
     { value: 'other', label: 'Övrigt' }
+  ];
+
+  const electronicsSubcategories = [
+    { value: 'computers-gaming', label: 'Datorer och TV-spel' },
+    { value: 'audio-video', label: 'Ljud och Bild' },
+    { value: 'phones-accessories', label: 'Telefoner & tillbehör' }
   ];
 
   const conditions = [
@@ -196,42 +211,61 @@ export function SellForm({ itemId }: SellFormProps) {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="category" className="block text-sm font-medium mb-2">
-                      Kategori *
-                    </label>
-                    <select
-                      id="category"
-                      value={formData.category}
-                      onChange={(e) => handleInputChange('category', e.target.value)}
-                      className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      {categories.map((cat) => (
-                        <option key={cat.value} value={cat.value}>
-                          {cat.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                <div>
+                  <label htmlFor="category" className="block text-sm font-medium mb-2">
+                    Kategori *
+                  </label>
+                  <select
+                    id="category"
+                    value={formData.category}
+                    onChange={(e) => handleInputChange('category', e.target.value)}
+                    className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {categories.map((cat) => (
+                      <option key={cat.value} value={cat.value}>
+                        {cat.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
+                {formData.category === 'electronics' && (
                   <div>
-                    <label htmlFor="condition" className="block text-sm font-medium mb-2">
-                      Skick *
+                    <label htmlFor="subcategory" className="block text-sm font-medium mb-2">
+                      Underkategori *
                     </label>
                     <select
-                      id="condition"
-                      value={formData.condition}
-                      onChange={(e) => handleInputChange('condition', e.target.value)}
+                      id="subcategory"
+                      value={formData.subcategory}
+                      onChange={(e) => handleInputChange('subcategory', e.target.value)}
                       className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      {conditions.map((cond) => (
-                        <option key={cond.value} value={cond.value}>
-                          {cond.label}
+                      <option value="">Välj underkategori</option>
+                      {electronicsSubcategories.map((subcat) => (
+                        <option key={subcat.value} value={subcat.value}>
+                          {subcat.label}
                         </option>
                       ))}
                     </select>
                   </div>
+                )}
+
+                <div>
+                  <label htmlFor="condition" className="block text-sm font-medium mb-2">
+                    Skick *
+                  </label>
+                  <select
+                    id="condition"
+                    value={formData.condition}
+                    onChange={(e) => handleInputChange('condition', e.target.value)}
+                    className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {conditions.map((cond) => (
+                      <option key={cond.value} value={cond.value}>
+                        {cond.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div>
