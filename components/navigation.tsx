@@ -2,11 +2,33 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Search, ShoppingBag } from 'lucide-react';
 import { SettingsDropdown } from '@/components/settings-dropdown';
+import { SearchBar } from '@/components/search-bar';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export function Navigation() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Read search query from URL on mount and when URL changes
+  useEffect(() => {
+    const urlSearchQuery = searchParams.get('search') || '';
+    setSearchQuery(urlSearchQuery);
+  }, [searchParams]);
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    // Navigate to dashboard with search query as URL parameter
+    if (query.trim()) {
+      router.push(`/dashboard?search=${encodeURIComponent(query.trim())}`);
+    } else {
+      router.push('/dashboard');
+    }
+  };
+
   return (
     <nav className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 py-4">
@@ -21,13 +43,11 @@ export function Navigation() {
 
           {/* Search Bar */}
           <div className="flex-1 max-w-md mx-8">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-              <Input
-                placeholder="Sök efter produkter..."
-                className="pl-10 pr-4"
-              />
-            </div>
+            <SearchBar
+              onSearch={handleSearch}
+              placeholder="Sök efter produkter..."
+              initialValue={searchQuery}
+            />
           </div>
 
           {/* Navigation Links and Profile */}

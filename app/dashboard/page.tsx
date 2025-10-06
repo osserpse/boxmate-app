@@ -36,8 +36,16 @@ async function getItems(): Promise<Item[]> {
   return items || []
 }
 
-export default async function DashboardPage() {
+interface DashboardPageProps {
+  searchParams: {
+    search?: string;
+  };
+}
+
+export default async function DashboardPage({ searchParams }: DashboardPageProps) {
   const items = await getItems()
+  const initialSearchQuery = searchParams.search || '';
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -88,7 +96,7 @@ export default async function DashboardPage() {
 
         {/* Featured Items */}
         <div className="mb-8">
-          <DashboardItemsManager initialItems={items} />
+          <DashboardItemsManager initialItems={items} initialSearchQuery={initialSearchQuery} />
         </div>
 
         {/* Categories */}
