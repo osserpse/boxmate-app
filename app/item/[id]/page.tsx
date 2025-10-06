@@ -176,7 +176,15 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
               </div>
               <div className="flex items-center gap-2 text-muted-foreground mb-4">
                 <MapPin className="w-5 h-5" />
-                <span className="text-lg">{item.location}</span>
+                <div className="flex flex-col">
+                  <span className="text-lg">{item.lagerplats}</span>
+                  {item.lokal && (
+                    <span className="text-sm text-muted-foreground">Lokal: {item.lokal}</span>
+                  )}
+                  {item.hyllplats && (
+                    <span className="text-sm text-muted-foreground">Hyllplats: {item.hyllplats}</span>
+                  )}
+                </div>
               </div>
               <div className="flex items-baseline gap-2">
                 <span className="text-5xl font-bold text-primary">
@@ -254,7 +262,9 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
             <ItemActions
               itemId={item.id}
               itemName={item.name}
-              itemLocation={item.location}
+              itemLagerplats={item.lagerplats}
+              itemLokal={item.lokal}
+              itemHyllplats={item.hyllplats}
               itemDescription={item.description || ''}
               itemValue={item.value}
               itemPhotos={item.photos}
@@ -289,7 +299,7 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
                         <h3 className="font-medium mb-2 line-clamp-2">{relatedItem.name}</h3>
                         <div className="flex items-center justify-between">
                           <span className="text-lime-600 font-semibold">{formatCurrency(relatedItem.value)}</span>
-                          <span className="text-sm text-muted-foreground">{relatedItem.location}</span>
+                          <span className="text-sm text-muted-foreground">{relatedItem.lagerplats}</span>
                         </div>
                       </div>
                     </CardContent>

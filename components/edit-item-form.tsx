@@ -15,7 +15,9 @@ import { ConditionDropdown } from '@/components/ui/condition-dropdown';
 interface EditItemFormProps {
   itemId: string;
   itemName: string;
-  currentLocation: string;
+  currentLagerplats: string;
+  currentLokal?: string;
+  currentHyllplats?: string;
   currentDescription: string;
   currentValue?: number;
   currentPhotos?: string[];
@@ -28,7 +30,9 @@ interface EditItemFormProps {
 export function EditItemForm({
   itemId,
   itemName: currentItemName,
-  currentLocation,
+  currentLagerplats,
+  currentLokal = '',
+  currentHyllplats = '',
   currentDescription,
   currentValue,
   currentPhotos = [],
@@ -39,7 +43,9 @@ export function EditItemForm({
 }: EditItemFormProps) {
   const [formData, setFormData] = useState({
     name: currentItemName,
-    location: currentLocation,
+    lagerplats: currentLagerplats,
+    lokal: currentLokal,
+    hyllplats: currentHyllplats,
     description: currentDescription,
     value: currentValue?.toString() || '',
     category: currentCategory,
@@ -78,8 +84,8 @@ export function EditItemForm({
       setError('Namn är obligatoriskt');
       return;
     }
-    if (!formData.location.trim()) {
-      setError('Plats är obligatorisk');
+    if (!formData.lagerplats.trim()) {
+      setError('Lagerplats är obligatorisk');
       return;
     }
     if (formData.category === 'electronics' && !formData.subcategory) {
@@ -138,7 +144,9 @@ export function EditItemForm({
       // Update item in database
       const updateData = {
         name: formData.name,
-        location: formData.location,
+        lagerplats: formData.lagerplats,
+        lokal: formData.lokal,
+        hyllplats: formData.hyllplats,
         description: formData.description || undefined,
         value: formData.value ? parseFloat(formData.value) : undefined,
         photoUrls: uploadedPhotoUrls.length > 0 ? uploadedPhotoUrls : undefined
@@ -328,16 +336,42 @@ export function EditItemForm({
             </div>
 
             <div>
-              <label htmlFor="location" className="block text-sm font-medium mb-2">
-                Plats *
+              <label htmlFor="lagerplats" className="block text-sm font-medium mb-2">
+                Lagerplats *
               </label>
               <Input
-                id="location"
+                id="lagerplats"
                 placeholder="ex. Stockholm, Sverige"
-                value={formData.location}
-                onChange={(e) => handleInputChange('location', e.target.value)}
+                value={formData.lagerplats}
+                onChange={(e) => handleInputChange('lagerplats', e.target.value)}
                 className="h-11"
                 required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="lokal" className="block text-sm font-medium mb-2">
+                Lokal
+              </label>
+              <Input
+                id="lokal"
+                placeholder="Lokal A, Lokal B, etc."
+                value={formData.lokal}
+                onChange={(e) => handleInputChange('lokal', e.target.value)}
+                className="h-11"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="hyllplats" className="block text-sm font-medium mb-2">
+                Hyllplats
+              </label>
+              <Input
+                id="hyllplats"
+                placeholder="Hyll A1, Hyll B2, etc."
+                value={formData.hyllplats}
+                onChange={(e) => handleInputChange('hyllplats', e.target.value)}
+                className="h-11"
               />
             </div>
           </CardContent>

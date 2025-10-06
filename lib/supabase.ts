@@ -57,7 +57,9 @@ export function createClientForCookies() {
 export interface Item {
   id: string
   name: string
-  location: string
+  lagerplats: string
+  lokal?: string
+  hyllplats?: string
   description?: string
   value?: number
   photo_url?: string

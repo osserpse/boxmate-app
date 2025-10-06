@@ -13,7 +13,9 @@ import { EditItemForm } from '@/components/edit-item-form';
 interface ItemActionsProps {
   itemId: string;
   itemName: string;
-  itemLocation: string;
+  itemLagerplats: string;
+  itemLokal?: string;
+  itemHyllplats?: string;
   itemDescription: string;
   itemValue?: number;
   itemPhotos?: string[];
@@ -22,7 +24,9 @@ interface ItemActionsProps {
 export function ItemActions({
   itemId,
   itemName,
-  itemLocation,
+  itemLagerplats,
+  itemLokal,
+  itemHyllplats,
   itemDescription,
   itemValue,
   itemPhotos
@@ -78,7 +82,9 @@ export function ItemActions({
             <EditItemForm
               itemId={itemId}
               itemName={itemName}
-              currentLocation={itemLocation}
+              currentLagerplats={itemLagerplats}
+              currentLokal={itemLokal}
+              currentHyllplats={itemHyllplats}
               currentDescription={itemDescription}
               currentValue={itemValue}
               currentPhotos={itemPhotos}

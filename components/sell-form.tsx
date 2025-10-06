@@ -21,7 +21,9 @@ export function SellForm({ itemId }: SellFormProps) {
     name: '',
     description: '',
     value: '',
-    location: '',
+    lagerplats: '',
+    lokal: '',
+    hyllplats: '',
     category: 'electronics',
     subcategory: '',
     condition: 'good',
@@ -51,8 +53,8 @@ export function SellForm({ itemId }: SellFormProps) {
     console.log('Files:', files);
 
     // Validation
-    if (!formData.name.trim() || !formData.location.trim()) {
-      setError('Namn och plats måste fyllas i');
+    if (!formData.name.trim() || !formData.lagerplats.trim()) {
+      setError('Namn och lagerplats måste fyllas i');
       return;
     }
 
@@ -117,7 +119,9 @@ export function SellForm({ itemId }: SellFormProps) {
       // Send only URLs to server action (much smaller payload)
       const addData = {
         name: formData.name,
-        location: formData.location,
+        lagerplats: formData.lagerplats,
+        lokal: formData.lokal,
+        hyllplats: formData.hyllplats,
         description: formData.description || undefined,
         value: formData.value ? parseFloat(formData.value) : undefined,
         photoUrls: uploadedPhotoUrls.length > 0 ? uploadedPhotoUrls : undefined
@@ -269,14 +273,40 @@ export function SellForm({ itemId }: SellFormProps) {
                 </div>
 
                 <div>
-                  <label htmlFor="location" className="block text-sm font-medium mb-2">
-                    Plats *
+                  <label htmlFor="lagerplats" className="block text-sm font-medium mb-2">
+                    Lagerplats *
                   </label>
                   <Input
-                    id="location"
+                    id="lagerplats"
                     placeholder="Stockholm, Sverige"
-                    value={formData.location}
-                    onChange={(e) => handleInputChange('location', e.target.value)}
+                    value={formData.lagerplats}
+                    onChange={(e) => handleInputChange('lagerplats', e.target.value)}
+                    className="h-11"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="lokal" className="block text-sm font-medium mb-2">
+                    Lokal
+                  </label>
+                  <Input
+                    id="lokal"
+                    placeholder="Lokal A, Lokal B, etc."
+                    value={formData.lokal}
+                    onChange={(e) => handleInputChange('lokal', e.target.value)}
+                    className="h-11"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="hyllplats" className="block text-sm font-medium mb-2">
+                    Hyllplats
+                  </label>
+                  <Input
+                    id="hyllplats"
+                    placeholder="Hyll A1, Hyll B2, etc."
+                    value={formData.hyllplats}
+                    onChange={(e) => handleInputChange('hyllplats', e.target.value)}
                     className="h-11"
                   />
                 </div>

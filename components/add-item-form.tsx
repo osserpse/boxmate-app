@@ -20,7 +20,9 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
     name: '',
     description: '',
     value: '',
-    location: '',
+    lagerplats: '',
+    lokal: '',
+    hyllplats: '',
     category: 'electronics',
     subcategory: '',
     condition: 'good'
@@ -45,8 +47,8 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
     e.preventDefault();
 
     // Validation
-    if (!formData.name.trim() || !formData.location.trim()) {
-      setError('Namn och plats måste fyllas i');
+    if (!formData.name.trim() || !formData.lagerplats.trim()) {
+      setError('Namn och lagerplats måste fyllas i');
       return;
     }
 
@@ -61,7 +63,9 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
     try {
       const addData: AddItemData = {
         name: formData.name,
-        location: formData.location,
+        lagerplats: formData.lagerplats,
+        lokal: formData.lokal,
+        hyllplats: formData.hyllplats,
         description: formData.description || undefined,
         value: formData.value ? parseFloat(formData.value) : undefined,
         photos: files.length > 0 ? files : undefined
@@ -85,7 +89,9 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
           name: '',
           description: '',
           value: '',
-          location: '',
+          lagerplats: '',
+          lokal: '',
+          hyllplats: '',
           category: 'electronics',
           subcategory: '',
           condition: 'good'
@@ -192,14 +198,42 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
 
       {/* Location */}
       <div>
-        <label htmlFor="location" className="block text-sm font-medium mb-2">
-          Plats *
+        <label htmlFor="lagerplats" className="block text-sm font-medium mb-2">
+          Lagerplats *
         </label>
         <Input
-          id="location"
+          id="lagerplats"
           placeholder="Stockholm, Sverige"
-          value={formData.location}
-          onChange={(e) => handleInputChange('location', e.target.value)}
+          value={formData.lagerplats}
+          onChange={(e) => handleInputChange('lagerplats', e.target.value)}
+          className="h-11"
+        />
+      </div>
+
+      {/* Lokal */}
+      <div>
+        <label htmlFor="lokal" className="block text-sm font-medium mb-2">
+          Lokal
+        </label>
+        <Input
+          id="lokal"
+          placeholder="Lokal A, Lokal B, etc."
+          value={formData.lokal}
+          onChange={(e) => handleInputChange('lokal', e.target.value)}
+          className="h-11"
+        />
+      </div>
+
+      {/* Hyllplats */}
+      <div>
+        <label htmlFor="hyllplats" className="block text-sm font-medium mb-2">
+          Hyllplats
+        </label>
+        <Input
+          id="hyllplats"
+          placeholder="Hyll A1, Hyll B2, etc."
+          value={formData.hyllplats}
+          onChange={(e) => handleInputChange('hyllplats', e.target.value)}
           className="h-11"
         />
       </div>

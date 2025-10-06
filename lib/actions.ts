@@ -5,7 +5,9 @@ import { revalidatePath } from 'next/cache'
 
 export interface AddItemData {
   name: string
-  location: string
+  lagerplats: string
+  lokal?: string
+  hyllplats?: string
   description?: string
   value?: number
   photos?: File[]
@@ -21,7 +23,9 @@ export interface FileData {
 
 export interface AddItemRequest {
   name: string
-  location: string
+  lagerplats: string
+  lokal?: string
+  hyllplats?: string
   description?: string
   value?: number
   photoUrls?: string[]
@@ -43,7 +47,9 @@ export async function addItem(data: AddItemRequest) {
 
     console.log('Inserting item into database:', {
       name: data.name,
-      location: data.location,
+      lagerplats: data.lagerplats,
+      lokal: data.lokal,
+      hyllplats: data.hyllplats,
       description: data.description,
       value: data.value,
       photo_url: primary_photo_url,
@@ -55,7 +61,9 @@ export async function addItem(data: AddItemRequest) {
       .from('items')
       .insert({
         name: data.name,
-        location: data.location,
+        lagerplats: data.lagerplats,
+        lokal: data.lokal,
+        hyllplats: data.hyllplats,
         description: data.description,
         value: data.value,
         photo_url: primary_photo_url,
@@ -106,7 +114,9 @@ export async function updateItem(itemId: string, data: AddItemRequest) {
       .from('items')
       .update({
         name: data.name,
-        location: data.location,
+        lagerplats: data.lagerplats,
+        lokal: data.lokal,
+        hyllplats: data.hyllplats,
         description: data.description,
         value: data.value,
         photo_url: entire_photo_url,
