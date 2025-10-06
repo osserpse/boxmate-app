@@ -19,6 +19,9 @@ interface ItemActionsProps {
   itemDescription: string;
   itemValue?: number;
   itemPhotos?: string[];
+  itemCategory?: string;
+  itemSubcategory?: string;
+  itemCondition?: string;
 }
 
 export function ItemActions({
@@ -29,7 +32,10 @@ export function ItemActions({
   itemHyllplats,
   itemDescription,
   itemValue,
-  itemPhotos
+  itemPhotos,
+  itemCategory,
+  itemSubcategory,
+  itemCondition
 }: ItemActionsProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -91,6 +97,9 @@ export function ItemActions({
               currentDescription={itemDescription}
               currentValue={itemValue}
               currentPhotos={itemPhotos || []}
+              currentCategory={itemCategory}
+              currentSubcategory={itemSubcategory}
+              currentCondition={itemCondition}
               onUpdate={handleEditComplete}
             />
           </DialogContent>

@@ -283,6 +283,9 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
               itemDescription={item.description || ''}
               itemValue={item.value}
               itemPhotos={item.photos}
+              itemCategory={item.category}
+              itemSubcategory={item.subcategory}
+              itemCondition={item.condition}
             />
 
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
