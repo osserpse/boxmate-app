@@ -1,5 +1,6 @@
 import { Navigation } from '@/components/navigation';
 import { DashboardItemsManager } from '@/components/dashboard-items-manager';
+import { DynamicCategories } from '@/components/dynamic-categories';
 import { createClient, Item } from '@/lib/supabase';
 import { TrendingUp, MapPin, Users } from 'lucide-react';
 import Link from 'next/link';
@@ -42,9 +43,73 @@ interface DashboardPageProps {
   };
 }
 
+// Generate dynamic categories and subcategories from items
+function generateCategories(items: Item[]) {
+  const categoryMap = new Map<string, Set<string>>();
+
+  items.forEach(item => {
+    if (item.category) {
+      if (!categoryMap.has(item.category)) {
+        categoryMap.set(item.category, new Set());
+      }
+
+      if (item.subcategory) {
+        categoryMap.get(item.category)!.add(item.subcategory);
+      }
+    }
+  });
+
+  const categories: Array<{
+    category: string;
+    subcategory?: string;
+    label: string;
+    sublabel?: string;
+  }> = [];
+
+  // Category labels mapping
+  const categoryLabels: { [key: string]: string } = {
+    'business': 'Affärsverksamhet',
+    'electronics': 'Elektronik',
+    'other': 'Övrigt'
+  };
+
+  // Subcategory labels mapping
+  const subcategoryLabels: { [key: string]: string } = {
+    'computers-gaming': 'Datorer och TV-spel',
+    'audio-video': 'Ljud och Bild',
+    'phones-accessories': 'Telefoner & tillbehör'
+  };
+
+  categoryMap.forEach((subcategories, category) => {
+    const categoryLabel = categoryLabels[category] || category;
+
+    if (subcategories.size === 0) {
+      // Category without subcategories
+      categories.push({
+        category,
+        label: categoryLabel
+      });
+    } else {
+      // Category with subcategories - create separate buttons for each combination
+      subcategories.forEach(subcategory => {
+        const subcategoryLabel = subcategoryLabels[subcategory] || subcategory;
+        categories.push({
+          category,
+          subcategory,
+          label: categoryLabel,
+          sublabel: subcategoryLabel
+        });
+      });
+    }
+  });
+
+  return categories;
+}
+
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
   const items = await getItems()
   const initialSearchQuery = searchParams.search || '';
+  const dynamicCategories = generateCategories(items);
 
   return (
     <div className="min-h-screen bg-background">
@@ -100,18 +165,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         </div>
 
         {/* Categories */}
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-stone-900 mb-6">Bläddra efter kategori</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {[
-              'Elektronik', 'Kläder', 'Böcker', 'Sport', 'Hem & trädgård', 'Leksaker'
-            ].map((category) => (
-              <div key={category} className="bg-stone-50 hover:bg-stone-100 rounded-lg p-4 text-center cursor-pointer transition-colors">
-                <h3 className="font-medium text-stone-900">{category}</h3>
-              </div>
-            ))}
-          </div>
-        </div>
+        <DynamicCategories categories={dynamicCategories} />
       </main>
 
       {/* Footer */}
