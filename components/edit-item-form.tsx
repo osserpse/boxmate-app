@@ -10,6 +10,7 @@ import { DialogClose } from '@/components/ui/dialog';
 import { DollarSign, Loader2, AlertTriangle } from 'lucide-react';
 import { updateItem, AddItemRequest } from '@/lib/actions';
 import { FileUpload } from '@/components/file-upload';
+import { ConditionDropdown } from '@/components/ui/condition-dropdown';
 
 interface EditItemFormProps {
   itemId: string;
@@ -20,6 +21,7 @@ interface EditItemFormProps {
   currentPhotos?: string[];
   currentCategory?: string;
   currentSubcategory?: string;
+  currentCondition?: string;
   onUpdate: () => void;
 }
 
@@ -32,6 +34,7 @@ export function EditItemForm({
   currentPhotos = [],
   currentCategory = 'electronics',
   currentSubcategory = '',
+  currentCondition = 'good',
   onUpdate
 }: EditItemFormProps) {
   const [formData, setFormData] = useState({
@@ -40,7 +43,8 @@ export function EditItemForm({
     description: currentDescription,
     value: currentValue?.toString() || '',
     category: currentCategory,
-    subcategory: currentSubcategory
+    subcategory: currentSubcategory,
+    condition: currentCondition
   });
   const [files, setFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -280,6 +284,17 @@ export function EditItemForm({
                 </select>
               </div>
             )}
+
+            <div>
+              <label htmlFor="condition" className="block text-sm font-medium mb-2">
+                Skick *
+              </label>
+              <ConditionDropdown
+                value={formData.condition}
+                onChange={(value) => handleInputChange('condition', value)}
+                placeholder="Välj från listan"
+              />
+            </div>
 
             <div>
               <label htmlFor="description" className="block text-sm font-medium mb-2">

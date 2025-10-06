@@ -64,6 +64,7 @@ export interface Item {
   photos?: string[] // Array of photo URLs
   category?: string
   subcategory?: string
+  condition?: string
   created_at: string
 }
 

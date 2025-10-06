@@ -9,6 +9,7 @@ import { DollarSign, ArrowLeft, Upload, Camera } from 'lucide-react';
 import Link from 'next/link';
 import { FileUpload } from '@/components/file-upload';
 import { addItem, AddItemRequest } from '@/lib/actions';
+import { ConditionDropdown } from '@/components/ui/condition-dropdown';
 
 interface SellFormProps {
   itemId: string;
@@ -155,14 +156,6 @@ export function SellForm({ itemId }: SellFormProps) {
     { value: 'phones-accessories', label: 'Telefoner & tillbehör' }
   ];
 
-  const conditions = [
-    { value: 'new', label: 'Som ny' },
-    { value: 'excellent', label: 'Utmärkt' },
-    { value: 'good', label: 'Bra' },
-    { value: 'fair', label: 'Skälig' },
-    { value: 'poor', label: 'Dålig' }
-  ];
-
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -254,18 +247,11 @@ export function SellForm({ itemId }: SellFormProps) {
                   <label htmlFor="condition" className="block text-sm font-medium mb-2">
                     Skick *
                   </label>
-                  <select
-                    id="condition"
+                  <ConditionDropdown
                     value={formData.condition}
-                    onChange={(e) => handleInputChange('condition', e.target.value)}
-                    className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    {conditions.map((cond) => (
-                      <option key={cond.value} value={cond.value}>
-                        {cond.label}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(value) => handleInputChange('condition', value)}
+                    placeholder="Välj från listan"
+                  />
                 </div>
 
                 <div>

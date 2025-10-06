@@ -9,6 +9,7 @@ import { DialogClose } from '@/components/ui/dialog';
 import { Plus, DollarSign } from 'lucide-react';
 import { addItem, AddItemData } from '@/lib/actions';
 import { FileUpload } from '@/components/file-upload';
+import { ConditionDropdown } from '@/components/ui/condition-dropdown';
 
 interface AddItemFormProps {
   onItemAdded: (item: any) => void;
@@ -21,7 +22,8 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
     value: '',
     location: '',
     category: 'electronics',
-    subcategory: ''
+    subcategory: '',
+    condition: 'good'
   });
   const [files, setFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -85,7 +87,8 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
           value: '',
           location: '',
           category: 'electronics',
-          subcategory: ''
+          subcategory: '',
+          condition: 'good'
         });
         setFiles([]);
       } else {
@@ -174,6 +177,18 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
           </select>
         </div>
       )}
+
+      {/* Condition */}
+      <div>
+        <label htmlFor="condition" className="block text-sm font-medium mb-2">
+          Skick *
+        </label>
+        <ConditionDropdown
+          value={formData.condition}
+          onChange={(value) => handleInputChange('condition', value)}
+          placeholder="Välj från listan"
+        />
+      </div>
 
       {/* Location */}
       <div>

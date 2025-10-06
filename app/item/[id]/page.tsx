@@ -104,6 +104,17 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
     return subcategories[subcategory] || subcategory;
   };
 
+  const getConditionLabel = (condition: string): string => {
+    const conditions: { [key: string]: string } = {
+      'new': 'Nytt skick - Helt ny',
+      'excellent': 'Mycket bra skick - Som ny',
+      'good': 'Bra skick - Sparsamt använd',
+      'fair': 'Okej skick - Synligt använd',
+      'broken': 'Funkar inte - Kan fixas'
+    };
+    return conditions[condition] || condition;
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -183,6 +194,14 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
                     <span>•</span>
                     <span className="text-sm">
                       <span className="font-medium">Underkategori:</span> {getSubcategoryLabel(item.subcategory)}
+                    </span>
+                  </>
+                )}
+                {item.condition && (
+                  <>
+                    <span>•</span>
+                    <span className="text-sm">
+                      <span className="font-medium">Skick:</span> {getConditionLabel(item.condition)}
                     </span>
                   </>
                 )}
