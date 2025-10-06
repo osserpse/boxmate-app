@@ -32,7 +32,7 @@ export function Navigation() {
 
           {/* Navigation Links and Profile */}
           <div className="flex items-center gap-3">
-            <Link href="/dashboard">
+            {/* <Link href="/dashboard">
               <Button variant="ghost" size="sm">
                 Översikt
               </Button>
@@ -42,7 +42,7 @@ export function Navigation() {
               <Button variant="accent" size="sm" className="bg-yellow-500 hover:bg-yellow-600">
                 Sälj produkt
               </Button>
-            </Link>
+            </Link> */}
 
             {/* Settings Dropdown */}
             <SettingsDropdown />

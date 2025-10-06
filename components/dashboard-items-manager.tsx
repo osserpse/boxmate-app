@@ -31,7 +31,7 @@ export function DashboardItemsManager({ initialItems }: DashboardItemsManagerPro
             <DialogTrigger asChild>
               <Button className="bg-lime-500 hover:bg-lime-600">
                 <Plus className="w-4 h-4 mr-2" />
-                Lägg till sak
+                Lägg till
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">

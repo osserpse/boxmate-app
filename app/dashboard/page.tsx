@@ -53,7 +53,7 @@ export default async function DashboardPage() {
             Anslut med din lokala gemenskap genom BoxMate.
           </p>
 
-          <div className="flex gap-6 justify-center">
+          {/* <div className="flex gap-6 justify-center">
             <Link href="/sell/new">
               <Button size="lg" variant="primary" className="bg-lime-500 hover:bg-lime-600">
                 Sälj en produkt
@@ -62,11 +62,11 @@ export default async function DashboardPage() {
             <Button size="lg" variant="outline">
               Bläddra kategorier
             </Button>
-          </div>
+          </div> */}
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <div className="bg-gradient-to-br from-lime-50 to-lime-100 rounded-xl p-6 text-center">
             <TrendingUp className="w-8 h-8 text-lime-600 mx-auto mb-3" />
             <h3 className="text-2xl font-bold text-lime-700">1 247</h3>
@@ -84,7 +84,7 @@ export default async function DashboardPage() {
             <h3 className="text-2xl font-bold text-stone-700">892</h3>
             <p className="text-stone-600">Tevna användare</p>
           </div>
-        </div>
+        </div> */}
 
         {/* Featured Items */}
         <div className="mb-8">

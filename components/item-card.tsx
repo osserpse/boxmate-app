@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Item } from '@/lib/supabase';
 import Link from 'next/link';
-import { MapPin, DollarSign } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import Image from 'next/image';
 
 interface ItemCardProps {
@@ -12,6 +12,16 @@ interface ItemCardProps {
 }
 
 export function ItemCard({ item }: ItemCardProps) {
+  const formatCurrency = (value: number | null | undefined): string => {
+    if (!value) return 'Ej specificerat';
+    return new Intl.NumberFormat('sv-SE', {
+      style: 'currency',
+      currency: 'SEK',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(value);
+  };
+
   return (
     <Link href={`/item/${item.id}`}>
       <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
@@ -55,9 +65,8 @@ export function ItemCard({ item }: ItemCardProps) {
           </div>
 
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1 text-lime-600 font-semibold">
-              <DollarSign className="w-4 h-4" />
-              <span>{item.value || 'Ej specificerat'}</span>
+            <div className="text-lime-600 font-semibold">
+              <span>{formatCurrency(item.value)}</span>
             </div>
 
             <Button size="sm" variant="outline" className="text-xs">

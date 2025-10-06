@@ -308,7 +308,7 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
           ) : (
             <>
               <Plus className="w-4 h-4 mr-2" />
-              Lägg till sak
+              Lägg till
             </>
           )}
         </Button>
