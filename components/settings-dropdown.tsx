@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { User, Settings, Building, MapPin, CreditCard, Users, Zap, HelpCircle, LogOut, ChevronDown } from 'lucide-react';
+import { User, Settings, Building, MapPin, CreditCard, Users, Zap, HelpCircle, LogOut, ChevronDown, BarChart3 } from 'lucide-react';
 
 export function SettingsDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -61,6 +61,24 @@ export function SettingsDropdown() {
 
           <Separator className="my-2" />
 
+          {/* Data & Insights */}
+          <div className="px-4 py-2">
+            <div className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+              <BarChart3 className="w-4 h-4" />
+              Data och insikter
+            </div>
+            <Link
+              href="/settings/analytics"
+              className="flex items-center gap-3 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-md transition-colors"
+              onClick={() => setIsOpen(false)}
+            >
+              <BarChart3 className="w-4 h-4" />
+              Statistik och rapporter
+            </Link>
+          </div>
+
+          <Separator className="my-2" />
+
           {/* Company Settings */}
           <div className="px-4 py-2">
             <div className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
@@ -73,7 +91,7 @@ export function SettingsDropdown() {
               onClick={() => setIsOpen(false)}
             >
               <MapPin className="w-4 h-4" />
-              Adress och kontakt
+              Platser och adresser
             </Link>
             <Link
               href="/settings/company/subscription"
@@ -81,7 +99,7 @@ export function SettingsDropdown() {
               onClick={() => setIsOpen(false)}
             >
               <CreditCard className="w-4 h-4" />
-              Prenumeration
+              Plan och funktioner
             </Link>
             <Link
               href="/settings/company/users"
@@ -89,7 +107,7 @@ export function SettingsDropdown() {
               onClick={() => setIsOpen(false)}
             >
               <Users className="w-4 h-4" />
-              Användare
+              Team och roller
             </Link>
             <Link
               href="/settings/company/integrations"
@@ -97,7 +115,7 @@ export function SettingsDropdown() {
               onClick={() => setIsOpen(false)}
             >
               <Zap className="w-4 h-4" />
-              Integrationer (Blocket)
+              Kopplingar till marknadsplatser
             </Link>
           </div>
 
