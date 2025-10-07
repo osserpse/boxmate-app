@@ -842,7 +842,7 @@ export function SellForm({ itemId }: SellFormProps) {
             {/* Success Message */}
             {savedAdId && (
               <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                <p className="text-green-800 text-sm">✅ Annons sparad som utkast! Klicka på "Publicera annons" för att fortsätta.</p>
+                <p className="text-green-800 text-sm">✅ Annons sparad som utkast! Klicka på &quot;Publicera annons&quot; för att fortsätta.</p>
               </div>
             )}
 
