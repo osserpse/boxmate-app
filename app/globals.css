@@ -15,7 +15,7 @@
     --secondary: var(--tw-stone-100);
     --secondary-foreground: var(--tw-stone-900);
     --background: var(--tw-white);
-    --foreground: var(--tw-stone-900);
+    --foreground: var(--tw-stone-700);
 
     --accent: var(--tw-yellow-300);
     --accent-foreground: var(--tw-stone-900);
@@ -31,7 +31,7 @@
     --popover-foreground: var(--tw-stone-900);
 
     --muted: var(--tw-stone-100);
-    --muted-foreground: var(--tw-stone-700);
+    --muted-foreground: var(--tw-stone-600);
 
     --destructive: var(--tw-red-500);
     --destructive-foreground: var(--tw-stone-50);
