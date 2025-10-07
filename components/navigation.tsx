@@ -5,10 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Search, ShoppingBag } from 'lucide-react';
 import { SettingsDropdown } from '@/components/settings-dropdown';
 import { SearchBar } from '@/components/search-bar';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export function Navigation() {
+function NavigationSearch() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
@@ -30,6 +30,16 @@ export function Navigation() {
   };
 
   return (
+    <SearchBar
+      onSearch={handleSearch}
+      placeholder="Sök efter produkter..."
+      initialValue={searchQuery}
+    />
+  );
+}
+
+export function Navigation() {
+  return (
     <nav className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between gap-4">
@@ -43,11 +53,9 @@ export function Navigation() {
 
           {/* Search Bar */}
           <div className="flex-1 max-w-md mx-8">
-            <SearchBar
-              onSearch={handleSearch}
-              placeholder="Sök efter produkter..."
-              initialValue={searchQuery}
-            />
+            <Suspense fallback={<div className="h-11 bg-muted rounded-md animate-pulse" />}>
+              <NavigationSearch />
+            </Suspense>
           </div>
 
           {/* Navigation Links and Profile */}
