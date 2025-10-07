@@ -2,7 +2,7 @@ import { Navigation } from '@/components/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { createClient, Item } from '@/lib/supabase';
-import { MapPin, User, Calendar, MessageCircle, Heart, Share2 } from 'lucide-react';
+import { MapPin, Calendar, Heart, Share2 } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ItemImage } from '@/components/item-image';

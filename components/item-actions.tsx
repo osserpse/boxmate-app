@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Trash2, Edit } from 'lucide-react';
+import { Trash2, Edit, Recycle } from 'lucide-react';
 import { deleteItem } from '@/lib/actions';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -73,7 +73,8 @@ export function ItemActions({
       {/* Left side: Sell button */}
       <Link href={`/sell/${itemId}`}>
         <Button className="bg-lime-500 hover:bg-lime-600">
-          ↄ Sälj vidare
+          <Recycle className="w-4 h-4 mr-2" />
+          Sälj vidare
         </Button>
       </Link>
 
