@@ -221,6 +221,109 @@
    - lucide-react
    - @chadcn/ui
 
+## Tailwind Color System
+
+### Architecture
+The project uses a modular Tailwind color system for easy maintenance and experimentation:
+
+1. **`app/tailwind-colors.css`** - Complete Tailwind color palette
+   - Contains ALL Tailwind colors as CSS custom properties
+   - Uses HSL values for consistency with Tailwind's design system
+   - Includes 22 color families (slate, gray, zinc, neutral, stone, red, orange, amber, yellow, lime, green, emerald, teal, cyan, sky, blue, indigo, violet, purple, fuchsia, pink, rose)
+   - Each color has 11 shades (50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950)
+   - Naming convention: `--tw-{color}-{shade}` (e.g., `--tw-blue-500`)
+
+2. **`app/globals.css`** - Semantic color mapping
+   - Imports the color palette: `@import './tailwind-colors.css';`
+   - Maps semantic colors to Tailwind colors
+   - Handles light/dark mode variations
+   - Defines app-specific color meanings
+
+### Usage Patterns
+
+1. **Semantic Color Mapping**
+   ```css
+   /* In globals.css */
+   --primary: var(--tw-lime-500);
+   --accent: var(--tw-yellow-400);
+   --secondary: var(--tw-stone-100);
+   ```
+
+2. **Easy Color Experimentation**
+   ```css
+   /* Change entire theme by updating semantic mappings */
+   --primary: var(--tw-blue-500);        /* Blue theme */
+   --accent: var(--tw-indigo-400);       /* Purple accent */
+   --secondary: var(--tw-slate-100);     /* Slate secondary */
+   ```
+
+3. **Component Usage**
+   ```tsx
+   // Use semantic colors in components
+   <Button className="bg-primary text-primary-foreground">
+   <Card className="bg-card text-card-foreground border-border">
+   ```
+
+### Color System Rules
+
+1. **Never use raw HSL values** - Always reference Tailwind colors
+   ```css
+   /* ❌ Bad */
+   --primary: 84 100% 45%;
+
+   /* ✅ Good */
+   --primary: var(--tw-lime-500);
+   ```
+
+2. **Use semantic naming** - Colors should have meaning
+   ```css
+   /* ✅ Semantic */
+   --primary: var(--tw-blue-500);
+   --destructive: var(--tw-red-500);
+   --success: var(--tw-green-500);
+   ```
+
+3. **Maintain consistency** - Use the same color family for related elements
+   ```css
+   /* ✅ Consistent */
+   --primary: var(--tw-blue-500);
+   --primary-foreground: var(--tw-blue-50);
+   --ring: var(--tw-blue-500);
+   ```
+
+4. **Consider accessibility** - Ensure proper contrast ratios
+   ```css
+   /* ✅ Good contrast */
+   --primary: var(--tw-blue-600);        /* Darker for better contrast */
+   --primary-foreground: var(--tw-white); /* High contrast text */
+   ```
+
+### Adding New Colors
+
+1. **Add to tailwind-colors.css** if using a new color family
+2. **Update semantic mapping** in globals.css
+3. **Test in both light and dark modes**
+4. **Verify accessibility** with contrast checkers
+
+### Color Experimentation Workflow
+
+1. **Quick theme changes** - Update semantic mappings in globals.css
+2. **Test different shades** - Try 400, 500, 600 variants
+3. **Consider color psychology** - Blue for trust, green for success, etc.
+4. **Maintain brand consistency** - Keep primary color consistent across app
+
+### Dark Mode Considerations
+
+1. **Separate mappings** - Define different colors for dark mode
+2. **Lighter variants** - Use lighter shades in dark mode for better visibility
+3. **Consistent contrast** - Maintain readability in both modes
+   ```css
+   .dark {
+     --primary: var(--tw-blue-400);      /* Lighter in dark mode */
+     --background: var(--tw-slate-950);  /* Dark background */
+   }
+   ```
+
 ## Commands
 
 1. Development

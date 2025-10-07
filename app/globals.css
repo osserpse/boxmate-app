@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import './tailwind-colors.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,35 +8,33 @@
   :root {
     --font-fira-sans: 'Fira Sans', sans-serif;
 
-    /* Lime (Primary) */
-    --primary: 84 100% 45%; /* lime-500 */
-    --primary-foreground: 0 0% 98%; /* stone-50 */
+    /* Semantic Color Mapping */
+    --primary: var(--tw-lime-500);
+    --primary-foreground: var(--tw-stone-50);
 
-    /* Stone (Secondary/Backgrounds) */
-    --secondary: 24 10% 95%; /* stone-100 */
-    --secondary-foreground: 24 10% 10%; /* stone-900 */
-    --background: 0 0% 100%; /* white */
-    --foreground: 24 10% 10%; /* stone-900 */
+    --secondary: var(--tw-stone-100);
+    --secondary-foreground: var(--tw-stone-900);
+    --background: var(--tw-white);
+    --foreground: var(--tw-stone-900);
 
-    /* Yellow (Accent) */
-    --accent: 53 91% 54%; /* yellow-400 */
-    --accent-foreground: 24 10% 10%; /* stone-900 */
+    --accent: var(--tw-yellow-400);
+    --accent-foreground: var(--tw-stone-900);
 
-    --border: 24 10% 90%; /* stone-200 */
-    --input: 24 10% 90%; /* stone-200 */
-    --ring: 84 100% 45%; /* lime-500 */
+    --border: var(--tw-stone-200);
+    --input: var(--tw-stone-200);
+    --ring: var(--tw-lime-500);
 
-    --card: 0 0% 100%;
-    --card-foreground: 24 10% 10%;
+    --card: var(--tw-white);
+    --card-foreground: var(--tw-stone-900);
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 24 10% 10%;
+    --popover: var(--tw-white);
+    --popover-foreground: var(--tw-stone-900);
 
-    --muted: 24 10% 95%; /* stone-100 */
-    --muted-foreground: 24 10% 45%; /* stone-500 */
+    --muted: var(--tw-stone-100);
+    --muted-foreground: var(--tw-stone-500);
 
-    --destructive: 0 84% 60%; /* red-500 */
-    --destructive-foreground: 0 0% 98%; /* stone-50 */
+    --destructive: var(--tw-red-500);
+    --destructive-foreground: var(--tw-stone-50);
 
     --radius: 12px;
   }
@@ -43,32 +42,33 @@
   .dark {
     --font-fira-sans: 'Fira Sans', sans-serif;
 
-    --primary: 84 100% 60%; /* lime-400 */
-    --primary-foreground: 24 10% 10%; /* stone-900 */
+    /* Semantic Color Mapping for Dark Mode */
+    --primary: var(--tw-lime-400);
+    --primary-foreground: var(--tw-stone-900);
 
-    --secondary: 24 10% 15%; /* stone-800 */
-    --secondary-foreground: 24 10% 95%; /* stone-100 */
-    --background: 24 10% 9%; /* stone-950 */
-    --foreground: 24 10% 95%; /* stone-100 */
+    --secondary: var(--tw-stone-800);
+    --secondary-foreground: var(--tw-stone-100);
+    --background: var(--tw-stone-950);
+    --foreground: var(--tw-stone-100);
 
-    --accent: 53 91% 60%; /* yellow-400 */
-    --accent-foreground: 24 10% 10%; /* stone-900 */
+    --accent: var(--tw-yellow-400);
+    --accent-foreground: var(--tw-stone-900);
 
-    --border: 24 10% 20%; /* stone-700 */
-    --input: 24 10% 20%; /* stone-700 */
-    --ring: 84 100% 60%; /* lime-400 */
+    --border: var(--tw-stone-700);
+    --input: var(--tw-stone-700);
+    --ring: var(--tw-lime-400);
 
-    --card: 24 10% 15%; /* stone-800 */
-    --card-foreground: 24 10% 95%; /* stone-100 */
+    --card: var(--tw-stone-800);
+    --card-foreground: var(--tw-stone-100);
 
-    --popover: 24 10% 15%; /* stone-800 */
-    --popover-foreground: 24 10% 95%; /* stone-100 */
+    --popover: var(--tw-stone-800);
+    --popover-foreground: var(--tw-stone-100);
 
-    --muted: 24 10% 20%; /* stone-700 */
-    --muted-foreground: 24 10% 65%; /* stone-400 */
+    --muted: var(--tw-stone-700);
+    --muted-foreground: var(--tw-stone-400);
 
-    --destructive: 0 62% 50%; /* red-600 */
-    --destructive-foreground: 0 0% 98%; /* stone-50 */
+    --destructive: var(--tw-red-600);
+    --destructive-foreground: var(--tw-stone-50);
   }
 }
 
