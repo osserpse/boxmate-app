@@ -9,7 +9,7 @@
     --font-fira-sans: 'Fira Sans', sans-serif;
 
     /* Semantic Color Mapping */
-    --primary: var(--tw-cyan-500); /* Updated to cyan */
+    --primary: var(--tw-emerald-700);
     --primary-foreground: var(--tw-stone-50);
 
     --secondary: var(--tw-stone-100);
@@ -17,12 +17,12 @@
     --background: var(--tw-white);
     --foreground: var(--tw-stone-900);
 
-    --accent: var(--tw-yellow-400);
+    --accent: var(--tw-yellow-300);
     --accent-foreground: var(--tw-stone-900);
 
     --border: var(--tw-stone-200);
     --input: var(--tw-stone-200);
-    --ring: var(--tw-cyan-500);
+    --ring: var(--tw-emerald-700);
 
     --card: var(--tw-white);
     --card-foreground: var(--tw-stone-900);
@@ -31,7 +31,7 @@
     --popover-foreground: var(--tw-stone-900);
 
     --muted: var(--tw-stone-100);
-    --muted-foreground: var(--tw-stone-500);
+    --muted-foreground: var(--tw-stone-700);
 
     --destructive: var(--tw-red-500);
     --destructive-foreground: var(--tw-stone-50);
@@ -51,7 +51,7 @@
     --font-fira-sans: 'Fira Sans', sans-serif;
 
     /* Semantic Color Mapping for Dark Mode */
-    --primary: var(--tw-cyan-400);
+    --primary: var(--tw-emerald-400);
     --primary-foreground: var(--tw-stone-900);
 
     --secondary: var(--tw-stone-800);
@@ -64,7 +64,7 @@
 
     --border: var(--tw-stone-700);
     --input: var(--tw-stone-700);
-    --ring: var(--tw-cyan-400);
+    --ring: var(--tw-emerald-400);
 
     --card: var(--tw-stone-800);
     --card-foreground: var(--tw-stone-100);
@@ -73,7 +73,7 @@
     --popover-foreground: var(--tw-stone-100);
 
     --muted: var(--tw-stone-700);
-    --muted-foreground: var(--tw-stone-400);
+    --muted-foreground: var(--tw-stone-300);
 
     --destructive: var(--tw-red-600);
     --destructive-foreground: var(--tw-stone-50);

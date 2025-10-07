@@ -117,7 +117,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
       <main className="w-full px-8 py-8">
         {/* Hero Section */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-16">
           <h1 className="text-4xl font-bold text-stone-900 mb-4">
             Få överblick över Acme Groups saker
           </h1>
@@ -159,7 +159,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         </div> */}
 
         {/* Featured Items */}
-        <div className="mb-8">
+        <div className="mb-16">
           <DashboardItemsManager initialItems={items} initialSearchQuery={initialSearchQuery} />
         </div>
 

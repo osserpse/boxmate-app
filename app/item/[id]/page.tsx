@@ -135,7 +135,7 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
 
       <main className="container mx-auto px-4 py-8">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
           <Link href="/dashboard" className="hover:text-lime-600">Översikt</Link>
           <span>→</span>
           <span>{getCategoryLabel(item.category || 'other')}</span>
@@ -149,18 +149,25 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
           <span className="text-stone-900">{item.name}</span>
         </nav>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 mb-12">
           <div className="space-y-4">
-            <div className="aspect-square rounded-2xl overflow-hidden bg-muted shadow-lg relative">
+            <div className="aspect-square rounded-2xl overflow-hidden bg-muted shadow-lg relative mb-8">
               <ItemImage
                 src={mainPhoto}
                 alt={item.name}
                 className="absolute inset-0 object-cover"
                 priority={true}
               />
+
+              {/* Condition Label Overlay */}
+              {item.condition && (
+                <div className="absolute top-4 left-4 bg-primary/80 text-primary-foreground px-3 py-2 rounded-lg text-sm font-medium shadow-lg">
+                  Skick: {getConditionLabel(item.condition)}
+                </div>
+              )}
             </div>
 
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-8">
               {thumbnailPhotos.map((photo, i) => (
                 <div
                   key={i}
@@ -189,57 +196,56 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
                   </Button>
                 </div>
               </div>
-              <div className="flex flex-col items-baseline">
-                <span className="text-5xl font-bold text-primary">
-                  {formatCurrency(item.value)}
-                </span>
-                <span className="text-sm text-muted-foreground">Uppskattat värde</span>
+
+              <Separator />
+              <div className=" my-4">
+                <h2 className="text-xl font-semibold text-foreground mb-3">Beskrivning</h2>
+                <p className="text-lg leading-relaxed">
+                  {item.description || 'Ingen beskrivning tillgänglig.'}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 my-4 bg-muted p-4 rounded-lg">
+                <MapPin className="w-5 h-5" />
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">{item.lagerplats}</span>
+                  {item.lokal && (
+                    <span className="text-sm">Lokal: <span className="font-medium">{item.lokal}</span></span>
+                  )}
+                  {item.hyllplats && (
+                    <span className="text-sm">Hyllplats: <span className="font-medium">{item.hyllplats}</span></span>
+                  )}
+                </div>
               </div>
 
               {/* Category Information */}
-              <div className="flex items-center gap-4 text-muted-foreground mt-4">
+              <div className="flex items-center gap-4 mt-4 bg-muted p-4 rounded-lg">
+                <div className="flex flex-col">
+                  <span className="text-sm">Värde</span>
+                  <span className="text-xl font-bold text-primary">
+                    {formatCurrency(item.value)}
+                  </span>
+                </div>
                 <span className="text-sm">
-                  <span className="font-medium">Tillgång i kategori:</span> {getCategoryLabel(item.category || 'other')}
+                  Tillgång i kategori: <span className="font-medium">{getCategoryLabel(item.category || 'other')}</span>
                 </span>
                 {item.category === 'electronics' && item.subcategory && (
                   <>
                     <span className="text-sm">
-                      <span className="font-medium">Underkategori:</span> {getSubcategoryLabel(item.subcategory)}
+                      Underkategori: <span className="font-medium">{getSubcategoryLabel(item.subcategory)}</span>
                     </span>
                   </>
                 )}
                 {item.condition && (
                   <>
                     <span className="text-sm">
-                      <span className="font-medium">Skick:</span> {getConditionLabel(item.condition)}
+                      Skick: <span className="font-medium">{getConditionLabel(item.condition)}</span>
                     </span>
                   </>
                 )}
               </div>
             </div>
 
-            <Separator />
-
-            <div>
-              <h2 className="text-xl font-semibold text-foreground mb-3">Beskrivning</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                {item.description || 'Ingen beskrivning tillgänglig.'}
-              </p>
-            </div>
-
-            <Separator />
-              <div className="flex items-center gap-2 text-muted-foreground mb-4">
-                <MapPin className="w-5 h-5" />
-                <div className="flex items-center gap-2">
-                  <span className="text-base">{item.lagerplats}</span>
-                  {item.lokal && (
-                    <span className="text-base text-muted-foreground">Lokal: {item.lokal}</span>
-                  )}
-                  {item.hyllplats && (
-                    <span className="text-base text-muted-foreground">Hyllplats: {item.hyllplats}</span>
-                  )}
-                </div>
-              </div>
             <Separator />
 
             {/* Seller Info */}
@@ -279,8 +285,6 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
               itemCondition={item.condition}
             />
 
-            <Separator />
-
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
@@ -290,11 +294,12 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
           </div>
         </div>
 
+        <Separator />
         {/* Related Items */}
         {relatedItems.length > 0 && (
           <div className="mt-12">
             <h2 className="text-base sm:text-2xl font-bold mb-6">Liknande produkter</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
               {relatedItems.map((relatedItem) => (
                 <Link key={relatedItem.id} href={`/item/${relatedItem.id}`}>
                   <Card className="hover:shadow-lg transition-shadow cursor-pointer">
@@ -305,11 +310,18 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
                           alt={relatedItem.name}
                           className="w-full h-full object-cover"
                         />
+
+                        {/* Condition Label Overlay */}
+                        {relatedItem.condition && (
+                          <div className="absolute top-2 left-2 bg-primary/80 text-primary-foreground px-2 py-1 rounded-md text-xs font-medium shadow-sm">
+                            Skick: {getConditionLabel(relatedItem.condition)}
+                          </div>
+                        )}
                       </div>
                       <div className="p-4">
                         <h3 className="font-medium mb-2 line-clamp-2">{relatedItem.name}</h3>
                         <div className="flex items-center justify-between">
-                          <span className="text-lime-600 font-semibold">{formatCurrency(relatedItem.value)}</span>
+                          <span className="text-primary font-semibold">{formatCurrency(relatedItem.value)}</span>
                           <span className="text-sm text-muted-foreground">{relatedItem.lagerplats}</span>
                         </div>
                       </div>

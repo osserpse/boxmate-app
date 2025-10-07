@@ -22,6 +22,17 @@ export function ItemCard({ item }: ItemCardProps) {
     }).format(value);
   };
 
+  const getConditionLabel = (condition: string): string => {
+    const conditions: { [key: string]: string } = {
+      'new': 'Nytt skick - Helt ny',
+      'excellent': 'Mycket bra skick - Som ny',
+      'good': 'Bra skick - Sparsamt använd',
+      'fair': 'Okej skick - Synligt använd',
+      'broken': 'Funkar inte - Kan fixas'
+    };
+    return conditions[condition] || condition;
+  };
+
   return (
     <Link href={`/item/${item.id}`}>
       <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
@@ -47,6 +58,13 @@ export function ItemCard({ item }: ItemCardProps) {
                 {item.name}
               </div>
             )}
+
+            {/* Condition Label Overlay */}
+            {item.condition && (
+              <div className="absolute top-2 left-2 bg-primary/80 text-primary-foreground px-2 py-1 rounded-md text-xs font-medium shadow-sm">
+                Skick: {getConditionLabel(item.condition)}
+              </div>
+            )}
           </div>
         </div>
 
@@ -55,12 +73,12 @@ export function ItemCard({ item }: ItemCardProps) {
 
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
             <MapPin className="w-4 h-4" />
-            <span>{item.lagerplats}</span>
+            <span className="font-medium">{item.lagerplats}.</span>
             {item.lokal && (
-              <span className="text-xs">• {item.lokal}</span>
+              <span className="text-xs">{item.lokal}</span>
             )}
             {item.hyllplats && (
-              <span className="text-xs">• {item.hyllplats}</span>
+              <span className="text-xs">{item.hyllplats}</span>
             )}
           </div>
 
