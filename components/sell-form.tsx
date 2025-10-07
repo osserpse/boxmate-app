@@ -1,15 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { DollarSign, ArrowLeft, Upload, Camera } from 'lucide-react';
+import { DollarSign, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
-import { FileUpload } from '@/components/file-upload';
-import { addItem, AddItemRequest } from '@/lib/actions';
+import { addItem, updateItem, AddItemRequest } from '@/lib/actions';
 import { ConditionDropdown } from '@/components/ui/condition-dropdown';
+import { ItemImage } from '@/components/item-image';
+import { Item } from '@/lib/supabase';
+import Image from 'next/image';
 
 interface SellFormProps {
   itemId: string;
@@ -22,16 +24,78 @@ export function SellForm({ itemId }: SellFormProps) {
     description: '',
     value: '',
     lagerplats: '',
-    lokal: '',
-    hyllplats: '',
     category: 'electronics',
     subcategory: '',
     condition: 'good',
     negotiable: false
   });
-  const [files, setFiles] = useState<File[]>([]);
+  const [existingItem, setExistingItem] = useState<Item | null>(null);
+  const [existingPhotos, setExistingPhotos] = useState<string[]>([]);
+  const [hiddenPhotos, setHiddenPhotos] = useState<Set<number>>(new Set());
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Fetch existing item data when editing
+  useEffect(() => {
+    if (!isNewItem) {
+      const fetchItem = async () => {
+        try {
+          const { createClient } = await import('@supabase/supabase-js');
+          const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+          const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+          const supabase = createClient(supabaseUrl, supabaseKey);
+
+          const { data: item, error } = await supabase
+            .from('items')
+            .select('*')
+            .eq('id', itemId)
+            .single();
+
+          if (error) {
+            console.error('Error fetching item:', error);
+            setError('Kunde inte hämta produktdata');
+            return;
+          }
+
+          if (item) {
+            setExistingItem(item);
+
+            // Parse photos JSON if it exists
+            let photos: string[] = [];
+            if (item.photos && typeof item.photos === 'string') {
+              try {
+                photos = JSON.parse(item.photos);
+              } catch (error) {
+                console.error('Error parsing photos JSON:', error);
+                photos = [];
+              }
+            } else if (Array.isArray(item.photos)) {
+              photos = item.photos;
+            }
+
+            setExistingPhotos(photos);
+
+            // Populate form with existing data
+            setFormData({
+              name: item.name || '',
+              description: item.description || '',
+              value: item.value ? item.value.toString() : '',
+              lagerplats: item.lagerplats || '',
+              category: item.category || 'electronics',
+              subcategory: item.subcategory || '',
+              condition: item.condition || 'good',
+              negotiable: false // This field doesn't exist in the database yet
+            });
+          }
+        } catch (err) {
+          console.error('Error in fetchItem:', err);
+          setError('Något gick fel när produktdata hämtades');
+        }
+      };
+
+      fetchItem();
+    }
+  }, [itemId, isNewItem]);
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => {
@@ -45,16 +109,27 @@ export function SellForm({ itemId }: SellFormProps) {
     if (error) setError('');
   };
 
+  const togglePhotoVisibility = (index: number) => {
+    setHiddenPhotos(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) {
+        newSet.delete(index);
+      } else {
+        newSet.add(index);
+      }
+      return newSet;
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     console.log('Form submitted');
     console.log('Form data:', formData);
-    console.log('Files:', files);
 
     // Validation
     if (!formData.name.trim() || !formData.lagerplats.trim()) {
-      setError('Namn och lagerplats måste fyllas i');
+      setError('Namn och plats måste fyllas i');
       return;
     }
 
@@ -67,79 +142,37 @@ export function SellForm({ itemId }: SellFormProps) {
     setError('');
 
     try {
-      let uploadedPhotoUrls = [];
+      // Use existing photos, filtering out hidden ones
+      const visiblePhotos = existingPhotos.filter((_, index) => !hiddenPhotos.has(index));
 
-      // Upload files to Supabase Storage first (client-side)
-      if (files.length > 0) {
-        console.log(`Uploading ${files.length} files to Supabase Storage...`);
-
-        // Import Supabase client dynamically
-        const { createClient } = await import('@supabase/supabase-js');
-        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-        const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-        const supabase = createClient(supabaseUrl, supabaseKey);
-
-        for (let i = 0; i < files.length; i++) {
-          const file = files[i];
-          try {
-            console.log(`Uploading file ${i + 1}: ${file.name}`);
-
-            // Generate unique filename
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}-${i}.${fileExt}`;
-
-            // Upload file to Supabase Storage
-            const { error: uploadError } = await supabase.storage
-              .from('item-photos')
-              .upload(fileName, file, {
-                contentType: file.type,
-                cacheControl: '3600',
-                upsert: false
-              });
-
-            if (uploadError) {
-              throw new Error(`Upload failed: ${uploadError.message}`);
-            }
-
-            // Get public URL
-            const { data: { publicUrl } } = supabase.storage
-              .from('item-photos')
-              .getPublicUrl(fileName);
-
-            uploadedPhotoUrls.push(publicUrl);
-            console.log(`Uploaded ${file.name} -> ${publicUrl}`);
-
-          } catch (fileError) {
-            console.error(`Error uploading ${file.name}:`, fileError);
-            throw new Error(`Fel vid uppladdning av ${file.name}: ${fileError}`);
-          }
-        }
-      }
-
-      // Send only URLs to server action (much smaller payload)
+      // Send data to server action
       const addData = {
         name: formData.name,
         lagerplats: formData.lagerplats,
-        lokal: formData.lokal,
-        hyllplats: formData.hyllplats,
         description: formData.description || undefined,
         value: formData.value ? parseFloat(formData.value) : undefined,
         category: formData.category,
         subcategory: formData.subcategory,
         condition: formData.condition,
-        photoUrls: uploadedPhotoUrls.length > 0 ? uploadedPhotoUrls : undefined
+        photoUrls: visiblePhotos.length > 0 ? visiblePhotos : undefined
       };
 
-      console.log('Calling addItem with:', addData);
-      const result = await addItem(addData);
-      console.log('addItem result:', result);
+      let result;
+      if (isNewItem) {
+        console.log('Calling addItem with:', addData);
+        result = await addItem(addData);
+      } else {
+        console.log('Calling updateItem with:', addData);
+        result = await updateItem(itemId, addData);
+      }
+      console.log('Result:', result);
 
       if (result.success && result.item) {
         console.log('Success! Redirecting to:', `/item/${result.item.id}`);
         // Redirect to item detail page
         window.location.href = `/item/${result.item.id}`;
       } else {
-        console.error('addItem failed:', result.error);
+        console.error('Operation failed:', result.error);
         setError(result.error || 'Något gick fel');
       }
 
@@ -175,10 +208,10 @@ export function SellForm({ itemId }: SellFormProps) {
           </Link>
           <div>
             <h1 className="text-3xl font-bold text-foreground">
-              {isNewItem ? 'Sälj ny produkt' : 'Redigera produkt'}
+              Skapa annons
             </h1>
             <p className="text-muted-foreground">
-              {isNewItem ? 'Skapa en annons för din produkt' : 'Uppdatera produktdetaljer'}
+              Redigera annonsinnehåll
             </p>
           </div>
         </div>
@@ -186,11 +219,50 @@ export function SellForm({ itemId }: SellFormProps) {
         <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Form */}
           <div className="lg:col-span-2 space-y-6">
-            {/* File Upload */}
-            <FileUpload
-              onFilesChange={setFiles}
-              className="space-y-4"
-            />
+            {/* Existing Photos */}
+            {!isNewItem && existingPhotos.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-xl">Produktbilder</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-4 gap-4">
+                    {existingPhotos.map((photoUrl, index) => (
+                      <div key={index} className="relative aspect-square bg-secondary rounded-lg overflow-hidden group">
+                        <Image
+                          src={photoUrl}
+                          alt={`Produktbild ${index + 1}`}
+                          fill
+                          sizes="(max-width: 768px) 25vw, 200px"
+                          className={`object-cover transition-opacity ${
+                            hiddenPhotos.has(index) ? 'opacity-50' : 'opacity-100'
+                          }`}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => togglePhotoVisibility(index)}
+                          className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white p-1 rounded-full transition-colors"
+                        >
+                          {hiddenPhotos.has(index) ? (
+                            <EyeOff className="w-4 h-4" />
+                          ) : (
+                            <Eye className="w-4 h-4" />
+                          )}
+                        </button>
+                        {hiddenPhotos.has(index) && (
+                          <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                            <span className="text-white text-xs font-medium">Dold</span>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Klicka på ögat för att dölja/visa bilder i annonsen
+                  </p>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Basic Information */}
             <Card>
@@ -277,39 +349,13 @@ export function SellForm({ itemId }: SellFormProps) {
 
                 <div>
                   <label htmlFor="lagerplats" className="block text-sm font-medium mb-2">
-                    Lagerplats *
+                    Plats *
                   </label>
                   <Input
                     id="lagerplats"
                     placeholder="Stockholm, Sverige"
                     value={formData.lagerplats}
                     onChange={(e) => handleInputChange('lagerplats', e.target.value)}
-                    className="h-11"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="lokal" className="block text-sm font-medium mb-2">
-                    Lokal
-                  </label>
-                  <Input
-                    id="lokal"
-                    placeholder="Lokal A, Lokal B, etc."
-                    value={formData.lokal}
-                    onChange={(e) => handleInputChange('lokal', e.target.value)}
-                    className="h-11"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="hyllplats" className="block text-sm font-medium mb-2">
-                    Hyllplats
-                  </label>
-                  <Input
-                    id="hyllplats"
-                    placeholder="Hyll A1, Hyll B2, etc."
-                    value={formData.hyllplats}
-                    onChange={(e) => handleInputChange('hyllplats', e.target.value)}
                     className="h-11"
                   />
                 </div>
@@ -327,7 +373,7 @@ export function SellForm({ itemId }: SellFormProps) {
               <CardContent className="space-y-4">
                 <div>
                   <label htmlFor="value" className="block text-sm font-medium mb-2">
-                    Värde (kr)
+                    Pris (kr), inklusive moms
                   </label>
                   <div className="relative">
                     <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
