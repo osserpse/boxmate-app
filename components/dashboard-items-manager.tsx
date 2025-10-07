@@ -88,7 +88,46 @@ export function DashboardItemsManager({ initialItems, initialSearchQuery = '' }:
 
   return (
     <div>
-      {/* Featured Items Header with Add Button */}
+      {/* Mobile Button Stack */}
+      <div className="flex flex-col items-center gap-3 mb-6 sm:hidden">
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-primary hover:bg-primary/90 w-full max-w-xs">
+              <Plus className="w-4 h-4 mr-2" />
+              Lägg till produkt
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Lägg till ny produkt</DialogTitle>
+            </DialogHeader>
+            <AddItemForm onItemAdded={handleItemAdded} />
+          </DialogContent>
+        </Dialog>
+
+        <div className="flex gap-3 w-full max-w-xs">
+          <Button
+            variant="outline"
+            onClick={() => setViewMode(viewMode === 'grid' ? 'location' : 'grid')}
+            className="flex items-center gap-2 flex-1"
+          >
+            {viewMode === 'grid' ? (
+              <>
+                <MapPin className="w-4 h-4" />
+                Visa per plats
+              </>
+            ) : (
+              <>
+                <Grid className="w-4 h-4" />
+                Visa rutnät
+              </>
+            )}
+          </Button>
+          <Button variant="outline" onClick={handleShowAll} className="flex-1">Visa alla</Button>
+        </div>
+      </div>
+
+      {/* Featured Items Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-lg sm:text-2xl font-bold text-foreground">Senast tillagda produkter</h2>
@@ -98,7 +137,8 @@ export function DashboardItemsManager({ initialItems, initialSearchQuery = '' }:
             </p>
           )}
         </div>
-        <div className="flex gap-3">
+        {/* Desktop Button Row */}
+        <div className="hidden sm:flex gap-3">
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger asChild>
               <Button className="bg-primary hover:bg-primary/90">
@@ -131,7 +171,7 @@ export function DashboardItemsManager({ initialItems, initialSearchQuery = '' }:
               </>
             )}
           </Button>
-            <Button variant="outline" onClick={handleShowAll}>Visa alla</Button>
+          <Button variant="outline" onClick={handleShowAll}>Visa alla</Button>
         </div>
       </div>
 

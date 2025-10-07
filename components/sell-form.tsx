@@ -954,8 +954,8 @@ export function SellForm({ itemId }: SellFormProps) {
               {/* PDF Content */}
               <div className="pdf-content bg-white p-8 shadow-lg">
                 <div className="text-center mb-8">
-                  <h1 className="text-3xl font-bold mb-2">{formData.name}</h1>
-                  <p className="text-lg text-muted-foreground">{formData.lagerplats}</p>
+                  <h1 className="text-3xl font-bold mb-2 text-gray-900">{formData.name}</h1>
+                  <p className="text-lg text-gray-600">{formData.lagerplats}</p>
                 </div>
 
                 {/* Main Image */}
@@ -976,20 +976,20 @@ export function SellForm({ itemId }: SellFormProps) {
                 {/* Details */}
                 <div className="grid grid-cols-2 gap-6 mb-6">
                   <div>
-                    <h3 className="font-semibold mb-2">Kategori</h3>
-                    <p className="text-muted-foreground">
+                    <h3 className="font-semibold mb-2 text-gray-900">Kategori</h3>
+                    <p className="text-gray-700">
                       {formData.category === 'electronics' ? 'Elektronik' :
                        formData.category === 'business' ? 'Affärsverksamhet' : 'Övrigt'}
                     </p>
                   </div>
                   <div>
-                    <h3 className="font-semibold mb-2">Skick</h3>
-                    <p className="text-muted-foreground">{getConditionLabel(formData.condition)}</p>
+                    <h3 className="font-semibold mb-2 text-gray-900">Skick</h3>
+                    <p className="text-gray-700">{getConditionLabel(formData.condition)}</p>
                   </div>
                   {formData.value && (
                     <div>
-                      <h3 className="font-semibold mb-2">Pris</h3>
-                      <p className="text-2xl font-bold text-primary">{formData.value} kr</p>
+                      <h3 className="font-semibold mb-2 text-gray-900">Pris</h3>
+                      <p className="text-2xl font-bold text-green-600">{formData.value} kr</p>
                     </div>
                   )}
                 </div>
@@ -997,15 +997,15 @@ export function SellForm({ itemId }: SellFormProps) {
                 {/* Description */}
                 {formData.description && (
                   <div className="mb-6">
-                    <h3 className="font-semibold mb-2">Beskrivning</h3>
-                    <p className="text-muted-foreground whitespace-pre-wrap">{formData.description}</p>
+                    <h3 className="font-semibold mb-2 text-gray-900">Beskrivning</h3>
+                    <p className="text-gray-700 whitespace-pre-wrap">{formData.description}</p>
                   </div>
                 )}
 
                 {/* Additional Images */}
                 {existingPhotos.length > 1 && (
                   <div className="mb-6">
-                    <h3 className="font-semibold mb-4">Fler bilder</h3>
+                    <h3 className="font-semibold mb-4 text-gray-900">Fler bilder</h3>
                     <div className="grid grid-cols-3 gap-4">
                       {existingPhotos.slice(1, 4).map((photo, index) => (
                         <div key={index} className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
