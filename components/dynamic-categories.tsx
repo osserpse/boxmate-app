@@ -27,17 +27,17 @@ export function DynamicCategories({ categories }: DynamicCategoriesProps) {
 
   return (
     <div className="mb-8">
-      <h2 className="text-lg sm:text-2xl  font-bold text-stone-900 mb-6">Bläddra efter kategori</h2>
+      <h2 className="text-lg sm:text-2xl  font-bold text-foreground mb-6">Bläddra efter kategori</h2>
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
         {categories.map((cat, index) => (
           <div
             key={`${cat.category}-${cat.subcategory || 'main'}-${index}`}
-            className="bg-stone-50 hover:bg-stone-100 rounded-lg p-4 text-center cursor-pointer transition-colors"
+            className="bg-secondary hover:bg-secondary/80 rounded-lg p-4 text-center cursor-pointer transition-colors"
             onClick={() => handleCategoryClick(cat)}
           >
-            <h3 className="font-medium text-stone-900">{cat.label}</h3>
+            <h3 className="font-medium text-foreground">{cat.label}</h3>
             {cat.sublabel && (
-              <p className="text-sm text-stone-600 mt-1">{cat.sublabel}</p>
+              <p className="text-sm text-muted-foreground mt-1">{cat.sublabel}</p>
             )}
           </div>
         ))}

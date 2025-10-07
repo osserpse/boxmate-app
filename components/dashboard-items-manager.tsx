@@ -65,7 +65,7 @@ export function DashboardItemsManager({ initialItems, initialSearchQuery = '' }:
       {/* Featured Items Header with Add Button */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-lg sm:text-2xl font-bold text-stone-900">Senast tillagda produkter</h2>
+          <h2 className="text-lg sm:text-2xl font-bold text-foreground">Senast tillagda produkter</h2>
           {searchQuery && (
             <p className="text-sm text-muted-foreground mt-1">
               Visar {filteredItems.length} av {items.length} produkter för &quot;{searchQuery}&quot;
@@ -75,7 +75,7 @@ export function DashboardItemsManager({ initialItems, initialSearchQuery = '' }:
         <div className="flex gap-3">
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-lime-500 hover:bg-lime-600">
+              <Button className="bg-primary hover:bg-primary/90">
                 <Plus className="w-4 h-4 mr-2" />
                 Lägg till produkt
               </Button>

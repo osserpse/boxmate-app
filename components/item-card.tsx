@@ -26,8 +26,8 @@ export function ItemCard({ item }: ItemCardProps) {
     <Link href={`/item/${item.id}`}>
       <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
         {/* Image placeholder */}
-        <div className="aspect-square bg-gradient-to-br from-lime-100 to-yellow-100 flex items-center justify-center">
-          <div className="w-full h-full bg-stone-100 relative overflow-hidden">
+        <div className="aspect-square bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
+          <div className="w-full h-full bg-secondary relative overflow-hidden">
             {item.photo_url ? (
               <Image
                 src={item.photo_url}
@@ -43,7 +43,7 @@ export function ItemCard({ item }: ItemCardProps) {
                 }}
               />
             ) : (
-              <div className="placeholder absolute inset-0 bg-stone-100 flex items-center justify-center text-stone-400 text-xs font-medium">
+              <div className="placeholder absolute inset-0 bg-secondary flex items-center justify-center text-muted-foreground text-xs font-medium">
                 {item.name}
               </div>
             )}
@@ -65,7 +65,7 @@ export function ItemCard({ item }: ItemCardProps) {
           </div>
 
           <div className="flex items-center justify-between">
-            <div className="text-lime-600 font-semibold">
+            <div className="text-primary font-semibold">
               <span>{formatCurrency(item.value)}</span>
             </div>
 

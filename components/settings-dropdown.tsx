@@ -42,16 +42,16 @@ export function SettingsDropdown() {
       </Button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+        <div className="absolute right-0 mt-2 w-64 bg-popover rounded-lg shadow-lg border border-border py-2 z-50">
           {/* User Settings */}
           <div className="px-4 py-2">
-            <div className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+            <div className="flex items-center gap-2 text-sm font-medium text-foreground mb-2">
               <Settings className="w-4 h-4" />
               Mina inställningar
             </div>
             <Link
               href="/settings/account"
-              className="flex items-center gap-3 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-md transition-colors"
+              className="flex items-center gap-3 px-3 py-2 text-sm text-muted-foreground hover:bg-muted rounded-md transition-colors"
               onClick={() => setIsOpen(false)}
             >
               <User className="w-4 h-4" />
@@ -63,13 +63,13 @@ export function SettingsDropdown() {
 
           {/* Data & Insights */}
           <div className="px-4 py-2">
-            <div className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+            <div className="flex items-center gap-2 text-sm font-medium text-foreground mb-2">
               <BarChart3 className="w-4 h-4" />
               Data och insikter
             </div>
             <Link
               href="/settings/analytics"
-              className="flex items-center gap-3 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-md transition-colors"
+              className="flex items-center gap-3 px-3 py-2 text-sm text-muted-foreground hover:bg-muted rounded-md transition-colors"
               onClick={() => setIsOpen(false)}
             >
               <BarChart3 className="w-4 h-4" />
@@ -81,13 +81,13 @@ export function SettingsDropdown() {
 
           {/* Company Settings */}
           <div className="px-4 py-2">
-            <div className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+            <div className="flex items-center gap-2 text-sm font-medium text-foreground mb-2">
               <Building className="w-4 h-4" />
               Företagsinställningar
             </div>
             <Link
               href="/settings/company/address"
-              className="flex items-center gap-3 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-md transition-colors"
+              className="flex items-center gap-3 px-3 py-2 text-sm text-muted-foreground hover:bg-muted rounded-md transition-colors"
               onClick={() => setIsOpen(false)}
             >
               <MapPin className="w-4 h-4" />
@@ -95,7 +95,7 @@ export function SettingsDropdown() {
             </Link>
             <Link
               href="/settings/company/subscription"
-              className="flex items-center gap-3 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-md transition-colors"
+              className="flex items-center gap-3 px-3 py-2 text-sm text-muted-foreground hover:bg-muted rounded-md transition-colors"
               onClick={() => setIsOpen(false)}
             >
               <CreditCard className="w-4 h-4" />
@@ -103,7 +103,7 @@ export function SettingsDropdown() {
             </Link>
             <Link
               href="/settings/company/users"
-              className="flex items-center gap-3 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-md transition-colors"
+              className="flex items-center gap-3 px-3 py-2 text-sm text-muted-foreground hover:bg-muted rounded-md transition-colors"
               onClick={() => setIsOpen(false)}
             >
               <Users className="w-4 h-4" />
@@ -111,7 +111,7 @@ export function SettingsDropdown() {
             </Link>
             <Link
               href="/settings/company/integrations"
-              className="flex items-center gap-3 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-md transition-colors"
+              className="flex items-center gap-3 px-3 py-2 text-sm text-muted-foreground hover:bg-muted rounded-md transition-colors"
               onClick={() => setIsOpen(false)}
             >
               <Zap className="w-4 h-4" />
@@ -125,7 +125,7 @@ export function SettingsDropdown() {
           <div className="px-4 py-2">
             <Link
               href="/settings/support"
-              className="flex items-center gap-3 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-md transition-colors"
+              className="flex items-center gap-3 px-3 py-2 text-sm text-muted-foreground hover:bg-muted rounded-md transition-colors"
               onClick={() => setIsOpen(false)}
             >
               <HelpCircle className="w-4 h-4" />
@@ -139,7 +139,7 @@ export function SettingsDropdown() {
           <div className="px-4 py-2">
             <button
               onClick={handleLogout}
-              className="flex items-center gap-3 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md transition-colors w-full text-left"
+              className="flex items-center gap-3 px-3 py-2 text-sm text-destructive hover:bg-destructive/10 rounded-md transition-colors w-full text-left"
             >
               <LogOut className="w-4 h-4" />
               Logga ut

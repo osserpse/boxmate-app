@@ -28,7 +28,7 @@ export function ItemImage({src, alt, className = '', priority = false}: ItemImag
           }}
         />
       ) : null}
-      <div className="placeholder absolute inset-0 bg-stone-100 flex items-center justify-center text-stone-400 text-xs font-medium"
+      <div className="placeholder absolute inset-0 bg-secondary flex items-center justify-center text-muted-foreground text-xs font-medium"
            style={{ display: src ? 'none' : 'flex' }}>
         {alt}
       </div>

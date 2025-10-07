@@ -198,8 +198,8 @@ export function EditItemForm({
   return (
     <div className="space-y-6">
       {/* Warning Message */}
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-        <div className="flex items-center gap-2 text-yellow-800">
+      <div className="bg-warning/10 border border-warning/20 rounded-lg p-4">
+        <div className="flex items-center gap-2 text-warning">
           <AlertTriangle className="w-4 h-4" />
           <span className="font-medium">OBS:</span>
           <span className="text-sm">
@@ -209,13 +209,13 @@ export function EditItemForm({
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 p-3 rounded-lg">
+        <div className="bg-destructive/10 border border-destructive/20 text-destructive p-3 rounded-lg">
           {error}
         </div>
       )}
 
       {isSuccess && (
-        <div className="bg-green-50 border border-green-200 text-green-700 p-3 rounded-lg">
+        <div className="bg-success/10 border border-success/20 text-success p-3 rounded-lg">
           ✅ Produkten har uppdaterats framgångsrikt!
         </div>
       )}
@@ -230,7 +230,7 @@ export function EditItemForm({
             <CardContent>
               <div className="grid grid-cols-4 gap-2 mb-4">
                 {(currentPhotos || []).map((photoUrl, i) => (
-                  <div key={i} className="aspect-square bg-stone-100 rounded-lg relative overflow-hidden">
+                  <div key={i} className="aspect-square bg-secondary rounded-lg relative overflow-hidden">
                     <Image
                       src={photoUrl}
                       alt={`Befintligt foto ${i + 1}`}
@@ -394,7 +394,7 @@ export function EditItemForm({
           </CardContent>
         </Card>
 
-        <Button type="submit" size="lg" className="w-full bg-lime-500 hover:bg-lime-600" disabled={isLoading || isSuccess}>
+        <Button type="submit" size="lg" className="w-full bg-primary hover:bg-primary/90" disabled={isLoading || isSuccess}>
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

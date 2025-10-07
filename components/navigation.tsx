@@ -48,10 +48,10 @@ export function Navigation() {
           <div className="flex items-center justify-between gap-4 mb-3">
             {/* Logo */}
             <Link href="/dashboard" className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-lime-500 rounded-lg flex items-center justify-center">
-                <ShoppingBag className="w-5 h-5 text-white" />
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <ShoppingBag className="w-5 h-5 text-primary-foreground" />
               </div>
-              <span className="font-bold text-xl text-lime-600">BoxMate</span>
+              <span className="font-bold text-xl text-primary">BoxMate</span>
             </Link>
 
             {/* Settings Dropdown */}
@@ -71,10 +71,10 @@ export function Navigation() {
       <div className="hidden md:flex md:items-center md:gap-8 md:px-8 md:py-4 md:w-full">
         {/* Logo */}
         <Link href="/dashboard" className="flex items-center gap-2 flex-shrink-0">
-          <div className="w-8 h-8 bg-lime-500 rounded-lg flex items-center justify-center">
-            <ShoppingBag className="w-5 h-5 text-white" />
+          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+            <ShoppingBag className="w-5 h-5 text-primary-foreground" />
           </div>
-          <span className="font-bold text-xl text-lime-600">BoxMate</span>
+          <span className="font-bold text-xl text-primary">BoxMate</span>
         </Link>
 
         {/* Search Bar - fills available space */}

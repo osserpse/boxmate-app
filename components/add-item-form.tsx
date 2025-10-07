@@ -276,15 +276,15 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-          <p className="text-red-800 text-sm">{error}</p>
+        <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3">
+          <p className="text-destructive text-sm">{error}</p>
         </div>
       )}
 
       {/* Loading State */}
       {isLoading && (
-        <div className="bg-lime-50 border border-lime-200 rounded-lg p-3">
-          <p className="text-lime-800 text-sm">Sparar produkt...</p>
+        <div className="bg-primary/10 border border-primary/20 rounded-lg p-3">
+          <p className="text-primary text-sm">Sparar produkt...</p>
         </div>
       )}
 
@@ -298,7 +298,7 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
         <Button
           type="submit"
           disabled={isLoading}
-          className="flex-1 bg-lime-500 hover:bg-lime-600"
+          className="flex-1 bg-primary hover:bg-primary/90"
         >
           {isLoading ? (
             <>

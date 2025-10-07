@@ -174,7 +174,7 @@ export function SellForm({ itemId }: SellFormProps) {
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold text-stone-900">
+            <h1 className="text-3xl font-bold text-foreground">
               {isNewItem ? 'Sälj ny produkt' : 'Redigera produkt'}
             </h1>
             <p className="text-muted-foreground">
@@ -351,7 +351,7 @@ export function SellForm({ itemId }: SellFormProps) {
                       type="checkbox"
                       checked={formData.negotiable}
                       onChange={(e) => handleInputChange('negotiable', e.target.checked)}
-                      className="rounded border-stone-300"
+                      className="rounded border-border"
                     />
                     <span className="text-sm text-muted-foreground">Pris är förhandlingsbart</span>
                   </label>
@@ -361,7 +361,7 @@ export function SellForm({ itemId }: SellFormProps) {
 
             {/* Actions */}
             <div className="space-y-3">
-              <Button type="submit" size="lg" className="w-full bg-lime-500 hover:bg-lime-600" disabled={isLoading}>
+              <Button type="submit" size="lg" className="w-full bg-primary hover:bg-primary/90" disabled={isLoading}>
                 {isLoading ? 'Sparar...' : (isNewItem ? 'Publicera annons' : 'Uppdatera annons')}
               </Button>
 
@@ -374,23 +374,23 @@ export function SellForm({ itemId }: SellFormProps) {
 
             {/* Error Message */}
             {error && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                <p className="text-red-800 text-sm">{error}</p>
+              <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3">
+                <p className="text-destructive text-sm">{error}</p>
               </div>
             )}
 
             {/* Loading State */}
             {isLoading && (
-              <div className="bg-lime-50 border border-lime-200 rounded-lg p-3">
-                <p className="text-lime-800 text-sm">Sparar produkt...</p>
+              <div className="bg-primary/10 border border-primary/20 rounded-lg p-3">
+                <p className="text-primary text-sm">Sparar produkt...</p>
               </div>
             )}
 
             {/* Tips */}
-            <Card className="bg-yellow-50 border-yellow-200">
+            <Card className="bg-warning/10 border-warning/20">
               <CardContent className="p-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">💡 Tips för att sälja:</h4>
-                <ul className="text-sm text-yellow-700 space-y-1">
+                <h4 className="font-semibold text-warning mb-2">💡 Tips för att sälja:</h4>
+                <ul className="text-sm text-warning/80 space-y-1">
                   <li>• Ta tydliga och välbelysta foton</li>
                   <li>• Skriv detaljerade beskrivningar</li>
                   <li>• Sätt konkurrenskraftiga priser</li>

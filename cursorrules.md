@@ -324,6 +324,161 @@ The project uses a modular Tailwind color system for easy maintenance and experi
    }
    ```
 
+## Building New Components with Tailwind Colors
+
+### Component Development Rules
+
+1. **ALWAYS use semantic colors** - Never hardcode Tailwind color classes
+   ```tsx
+   // ❌ NEVER do this
+   <Button className="bg-blue-500 hover:bg-blue-600 text-white">
+   <div className="text-red-600 bg-red-50 border-red-200">
+
+   // ✅ ALWAYS do this
+   <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
+   <div className="text-destructive bg-destructive/10 border-destructive/20">
+   ```
+
+2. **Use semantic color variables** - Reference the complete color system
+   ```tsx
+   // Primary colors
+   className="bg-primary text-primary-foreground"
+   className="border-primary hover:bg-primary/10"
+
+   // Secondary colors
+   className="bg-secondary text-secondary-foreground"
+   className="border-secondary hover:bg-secondary/80"
+
+   // Semantic colors
+   className="bg-destructive text-destructive-foreground"  // Errors
+   className="bg-success text-success-foreground"          // Success states
+   className="bg-warning text-warning-foreground"          // Warnings
+   className="bg-info text-info-foreground"                // Info messages
+
+   // UI colors
+   className="bg-background text-foreground"               // Main content
+   className="bg-card text-card-foreground"                // Cards
+   className="bg-muted text-muted-foreground"              // Subtle elements
+   className="border-border"                               // Borders
+   ```
+
+3. **Opacity modifiers** - Use opacity for hover states and subtle backgrounds
+   ```tsx
+   // Hover states
+   className="hover:bg-primary/90"           // 90% opacity
+   className="hover:bg-destructive/10"       // 10% opacity for subtle backgrounds
+
+   // Background overlays
+   className="bg-primary/10 border-primary/20"  // Light backgrounds with borders
+   className="bg-warning/10 text-warning"       // Warning backgrounds
+   ```
+
+### Component Color Patterns
+
+1. **Buttons**
+   ```tsx
+   // Primary button
+   <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
+
+   // Secondary button
+   <Button variant="outline" className="border-primary text-primary hover:bg-primary/10">
+
+   // Destructive button
+   <Button className="bg-destructive hover:bg-destructive/90 text-destructive-foreground">
+
+   // Muted button
+   <Button variant="ghost" className="text-muted-foreground hover:bg-muted">
+   ```
+
+2. **Cards and Containers**
+   ```tsx
+   // Main card
+   <Card className="bg-card text-card-foreground border-border">
+
+   // Warning card
+   <Card className="bg-warning/10 border-warning/20 text-warning">
+
+   // Success card
+   <Card className="bg-success/10 border-success/20 text-success">
+   ```
+
+3. **Form Elements**
+   ```tsx
+   // Input fields
+   <Input className="border-border bg-background text-foreground focus:border-primary" />
+
+   // Error states
+   <div className="bg-destructive/10 border-destructive/20 text-destructive p-3 rounded">
+
+   // Success states
+   <div className="bg-success/10 border-success/20 text-success p-3 rounded">
+   ```
+
+4. **Navigation and UI Elements**
+   ```tsx
+   // Navigation items
+   <Link className="text-muted-foreground hover:text-foreground hover:bg-muted">
+
+   // Active states
+   <Link className="text-primary bg-primary/10 border-primary/20">
+
+   // Dropdowns
+   <div className="bg-popover text-popover-foreground border-border">
+   ```
+
+### Color System Checklist for New Components
+
+Before creating any component, ensure:
+
+1. **✅ No hardcoded colors** - Check for `red-`, `blue-`, `green-`, `yellow-`, `gray-`, etc.
+2. **✅ Use semantic variables** - `primary`, `secondary`, `destructive`, `success`, `warning`, `info`
+3. **✅ Proper contrast** - Use `-foreground` variants for text on colored backgrounds
+4. **✅ Hover states** - Use opacity modifiers like `/90` or `/10`
+5. **✅ Dark mode ready** - Colors automatically adapt via CSS variables
+6. **✅ Consistent patterns** - Follow existing component color patterns
+
+### Common Mistakes to Avoid
+
+1. **❌ Hardcoded Tailwind colors**
+   ```tsx
+   // DON'T DO THIS
+   className="bg-blue-500 text-white border-blue-600"
+   ```
+
+2. **❌ Missing foreground colors**
+   ```tsx
+   // DON'T DO THIS - poor contrast
+   className="bg-primary text-white"
+
+   // DO THIS - proper contrast
+   className="bg-primary text-primary-foreground"
+   ```
+
+3. **❌ Inconsistent hover states**
+   ```tsx
+   // DON'T DO THIS - inconsistent opacity
+   className="bg-primary hover:bg-blue-600"
+
+   // DO THIS - consistent opacity
+   className="bg-primary hover:bg-primary/90"
+   ```
+
+4. **❌ Wrong semantic colors**
+   ```tsx
+   // DON'T DO THIS - using primary for errors
+   className="bg-primary text-primary-foreground" // for error message
+
+   // DO THIS - use appropriate semantic color
+   className="bg-destructive text-destructive-foreground" // for error message
+   ```
+
+### Testing Color Changes
+
+1. **Component isolation** - Test components in both light and dark modes
+2. **Accessibility** - Verify contrast ratios meet WCAG standards
+3. **Consistency** - Ensure colors match the overall design system
+4. **Theme switching** - Test that colors update when changing CSS variables
+
 ## Commands
 
 1. Development

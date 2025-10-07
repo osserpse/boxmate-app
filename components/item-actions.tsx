@@ -72,7 +72,7 @@ export function ItemActions({
     <div className="flex items-center justify-between gap-4">
       {/* Left side: Sell button */}
       <Link href={`/sell/${itemId}`}>
-        <Button className="bg-lime-500 hover:bg-lime-600">
+        <Button className="bg-primary hover:bg-primary/90">
           <Recycle className="w-4 h-4 mr-2" />
           Sälj vidare
         </Button>
@@ -115,7 +115,7 @@ export function ItemActions({
           <DialogTrigger asChild>
             <Button
               variant="outline"
-              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+              className="text-destructive hover:text-destructive/80 hover:bg-destructive/10"
               disabled={isDeleting}
             >
               <Trash2 className="w-4 h-4 mr-2" />
@@ -138,7 +138,7 @@ export function ItemActions({
               <Button
                 onClick={handleDelete}
                 variant="outline"
-                className="flex-1 text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+                className="flex-1 text-destructive hover:text-destructive/80 hover:bg-destructive/10 border-destructive/20"
                 disabled={isDeleting}
               >
                 {isDeleting ? 'Tar bort...' : 'Ta bort'}
