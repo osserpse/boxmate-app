@@ -41,40 +41,52 @@ function NavigationSearch() {
 export function Navigation() {
   return (
     <nav className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between gap-4">
-          {/* Logo */}
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-lime-500 rounded-lg flex items-center justify-center">
-              <ShoppingBag className="w-5 h-5 text-white" />
-            </div>
-            <span className="font-bold text-xl text-lime-600">BoxMate</span>
-          </Link>
-
-          {/* Search Bar */}
-          <div className="flex-1 max-w-md mx-8">
-            <Suspense fallback={<div className="h-11 bg-muted rounded-md animate-pulse" />}>
-              <NavigationSearch />
-            </Suspense>
-          </div>
-
-          {/* Navigation Links and Profile */}
-          <div className="flex items-center gap-3">
-            {/* <Link href="/dashboard">
-              <Button variant="ghost" size="sm">
-                Översikt
-              </Button>
+      {/* Mobile Layout: Two rows with container */}
+      <div className="md:hidden">
+        <div className="container mx-auto px-4 py-4">
+          {/* First Row: Logo and User Profile */}
+          <div className="flex items-center justify-between gap-4 mb-3">
+            {/* Logo */}
+            <Link href="/dashboard" className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-lime-500 rounded-lg flex items-center justify-center">
+                <ShoppingBag className="w-5 h-5 text-white" />
+              </div>
+              <span className="font-bold text-xl text-lime-600">BoxMate</span>
             </Link>
-
-            <Link href="/sell/new">
-              <Button variant="accent" size="sm" className="bg-yellow-500 hover:bg-yellow-600">
-                Sälj produkt
-              </Button>
-            </Link> */}
 
             {/* Settings Dropdown */}
             <SettingsDropdown />
           </div>
+
+          {/* Second Row: Search Bar */}
+          <div>
+            <Suspense fallback={<div className="h-11 bg-muted rounded-md animate-pulse" />}>
+              <NavigationSearch />
+            </Suspense>
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop Layout: Full width single row */}
+      <div className="hidden md:flex md:items-center md:gap-8 md:px-8 md:py-4 md:w-full">
+        {/* Logo */}
+        <Link href="/dashboard" className="flex items-center gap-2 flex-shrink-0">
+          <div className="w-8 h-8 bg-lime-500 rounded-lg flex items-center justify-center">
+            <ShoppingBag className="w-5 h-5 text-white" />
+          </div>
+          <span className="font-bold text-xl text-lime-600">BoxMate</span>
+        </Link>
+
+        {/* Search Bar - fills available space */}
+        <div className="flex-1 mx-8">
+          <Suspense fallback={<div className="h-11 bg-muted rounded-md animate-pulse" />}>
+            <NavigationSearch />
+          </Suspense>
+        </div>
+
+        {/* Settings Dropdown */}
+        <div className="flex-shrink-0">
+          <SettingsDropdown />
         </div>
       </div>
     </nav>

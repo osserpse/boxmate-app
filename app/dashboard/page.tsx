@@ -115,7 +115,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     <div className="min-h-screen bg-background">
       <Navigation />
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="w-full px-8 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-stone-900 mb-4">
@@ -170,7 +170,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
       {/* Footer */}
       <footer className="bg-stone-50 border-t mt-16">
-        <div className="container mx-auto px-4 py-8">
+        <div className="w-full px-8 py-8">
           <div className="text-center text-muted-foreground">
             <p>&copy; 2024 BoxMate. Gör lokal köp och sälj roligt och tillgängligt.</p>
           </div>
