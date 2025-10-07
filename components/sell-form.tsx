@@ -7,9 +7,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DollarSign, ArrowLeft, Eye, EyeOff, ChevronDown, FileText, Settings, ExternalLink, Star } from 'lucide-react';
 import Link from 'next/link';
-import { addItem, updateItem, AddItemRequest } from '@/lib/actions';
+import { createAd, updateAd, AdRequest } from '@/lib/ad-actions';
 import { ConditionDropdown } from '@/components/ui/condition-dropdown';
 import { ItemImage } from '@/components/item-image';
+import { Ad } from '@/lib/ad-actions';
 import { Item } from '@/lib/supabase';
 import Image from 'next/image';
 
@@ -52,7 +53,7 @@ export function SellForm({ itemId }: SellFormProps) {
     }
   }, [isDropdownOpen]);
 
-  // Fetch existing item data when editing
+  // Fetch existing item data to populate the sell form
   useEffect(() => {
     if (!isNewItem) {
       const fetchItem = async () => {
@@ -97,7 +98,7 @@ export function SellForm({ itemId }: SellFormProps) {
               setPrimaryImageIndex(0);
             }
 
-            // Populate form with existing data
+            // Populate form with existing item data
             setFormData({
               name: item.name || '',
               description: item.description || '',
@@ -199,8 +200,8 @@ export function SellForm({ itemId }: SellFormProps) {
         }
       }
 
-      // Send data to server action
-      const addData = {
+      // Send data to server action - always create new ad from item
+      const adData: AdRequest = {
         name: formData.name,
         lagerplats: formData.lagerplats,
         description: formData.description || undefined,
@@ -208,23 +209,18 @@ export function SellForm({ itemId }: SellFormProps) {
         category: formData.category,
         subcategory: formData.subcategory,
         condition: formData.condition,
-        photoUrls: visiblePhotos.length > 0 ? visiblePhotos : undefined
+        photoUrls: visiblePhotos.length > 0 ? visiblePhotos : undefined,
+        itemId: !isNewItem ? itemId : undefined // Always link to the original item
       };
 
-      let result;
-      if (isNewItem) {
-        console.log('Calling addItem with:', addData);
-        result = await addItem(addData);
-      } else {
-        console.log('Calling updateItem with:', addData);
-        result = await updateItem(itemId, addData);
-      }
+      console.log('Creating ad from item with data:', adData);
+      const result = await createAd(adData);
       console.log('Result:', result);
 
-      if (result.success && result.item) {
-        console.log('Success! Redirecting to:', `/item/${result.item.id}`);
-        // Redirect to item detail page
-        window.location.href = `/item/${result.item.id}`;
+      if (result.success && result.ad) {
+        console.log('Success! Redirecting to:', `/ad/${result.ad.id}`);
+        // Redirect to ad detail page (you may need to create this page)
+        window.location.href = `/ad/${result.ad.id}`;
       } else {
         console.error('Operation failed:', result.error);
         setError(result.error || 'Något gick fel');
@@ -232,7 +228,7 @@ export function SellForm({ itemId }: SellFormProps) {
 
     } catch (err) {
       console.error('Error in handleSubmit:', err);
-      setError('Något gick fel när produkten sparades');
+      setError('Något gick fel när annonsen sparades');
     } finally {
       setIsLoading(false);
     }
@@ -262,10 +258,10 @@ export function SellForm({ itemId }: SellFormProps) {
           </Link>
           <div>
             <h1 className="text-3xl font-bold text-foreground">
-              Skapa annons
+              Skapa annons från produkt
             </h1>
             <p className="text-muted-foreground">
-              Redigera annonsinnehåll
+              Anpassa produktinformation för annonsen
             </p>
           </div>
         </div>
@@ -346,7 +342,7 @@ export function SellForm({ itemId }: SellFormProps) {
                     ))}
                   </div>
                   <p className="text-sm text-muted-foreground mt-2">
-                    Klicka på bilden för att dölja/visa i annonsen. Klicka på stjärnan för att välja huvudbild.
+                    Produktbilder från inventariet. Klicka på bilden för att dölja/visa i annonsen. Klicka på stjärnan för att välja huvudbild.
                   </p>
                 </CardContent>
               </Card>
@@ -482,8 +478,8 @@ export function SellForm({ itemId }: SellFormProps) {
             <div className="flex flex-col space-y-3">
               {/* Main Action Buttons */}
               <div className="flex gap-3">
-                <Button type="button" size="lg" variant="outline" className="flex-1" disabled={isLoading}>
-                  {isLoading ? 'Sparar...' : (isNewItem ? 'Publicera annons' : 'Spara annons')}
+                <Button type="submit" size="lg" variant="outline" className="flex-1" disabled={isLoading}>
+                  {isLoading ? 'Sparar...' : 'Spara som utkast'}
                 </Button>
                 <Button type="button" variant="outline" size="lg" className="flex-1">
                   Förhandsgranska
@@ -551,7 +547,7 @@ export function SellForm({ itemId }: SellFormProps) {
             {/* Loading State */}
             {isLoading && (
               <div className="bg-primary/10 border border-primary/20 rounded-lg p-3">
-                <p className="text-primary text-sm">Sparar produkt...</p>
+                <p className="text-primary text-sm">Sparar annons...</p>
               </div>
             )}
 
