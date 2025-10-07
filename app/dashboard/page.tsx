@@ -118,7 +118,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       <main className="w-full px-8 py-8">
         {/* Hero Section */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-stone-900 mb-4">
+          <h1 className="text-4xl font-bold text-foreground mb-4">
             Få överblick över Acme Groups saker
           </h1>
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
@@ -141,20 +141,20 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <div className="bg-gradient-to-br from-lime-50 to-lime-100 rounded-xl p-6 text-center">
             <TrendingUp className="w-8 h-8 text-lime-600 mx-auto mb-3" />
-            <h3 className="text-2xl font-bold text-lime-700">1 247</h3>
-            <p className="text-lime-600">Sålda produkter</p>
+            <h3 className="text-2xl font-bold text-primary">1 247</h3>
+            <p className="text-primary/80">Sålda produkter</p>
           </div>
 
           <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl p-6 text-center">
             <MapPin className="w-8 h-8 text-yellow-600 mx-auto mb-3" />
-            <h3 className="text-2xl font-bold text-yellow-700">15</h3>
-            <p className="text-yellow-600">Städer</p>
+            <h3 className="text-2xl font-bold text-accent">15</h3>
+            <p className="text-accent/80">Städer</p>
           </div>
 
           <div className="bg-gradient-to-br from-stone-50 to-stone-100 rounded-xl p-6 text-center">
             <Users className="w-8 h-8 text-stone-600 mx-auto mb-3" />
-            <h3 className="text-2xl font-bold text-stone-700">892</h3>
-            <p className="text-stone-600">Tevna användare</p>
+            <h3 className="text-2xl font-bold text-foreground">892</h3>
+            <p className="text-muted-foreground">Tevna användare</p>
           </div>
         </div> */}
 

@@ -298,7 +298,7 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
         {/* Related Items */}
         {relatedItems.length > 0 && (
           <div className="mt-12">
-            <h2 className="text-base sm:text-2xl font-bold mb-6">Liknande produkter</h2>
+            <h2 className="text-base sm:text-2xl font-bold mb-6 text-foreground">Liknande produkter</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
               {relatedItems.map((relatedItem) => (
                 <Link key={relatedItem.id} href={`/item/${relatedItem.id}`}>
@@ -319,7 +319,7 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
                         )}
                       </div>
                       <div className="p-4">
-                        <h3 className="font-medium mb-2 line-clamp-2">{relatedItem.name}</h3>
+                        <h3 className="font-medium mb-2 line-clamp-2 text-foreground">{relatedItem.name}</h3>
                         <div className="flex items-center justify-between">
                           <span className="text-primary font-semibold">{formatCurrency(relatedItem.value)}</span>
                           <span className="text-sm text-muted-foreground">{relatedItem.lagerplats}</span>

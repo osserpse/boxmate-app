@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Search, ShoppingBag } from 'lucide-react';
 import { SettingsDropdown } from '@/components/settings-dropdown';
 import { SearchBar } from '@/components/search-bar';
+import { ThemeToggle } from '@/components/theme-toggle';
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -40,7 +41,7 @@ function NavigationSearch() {
 
 export function Navigation() {
   return (
-    <nav className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <nav className="sticky top-0 z-50 border-b bg-gradient-to-b from-[hsl(var(--nav-gradient-start))] via-[hsl(var(--nav-gradient-middle))] to-[hsl(var(--nav-gradient-end))] backdrop-blur supports-[backdrop-filter]:bg-background/60">
       {/* Mobile Layout: Two rows with container */}
       <div className="md:hidden">
         <div className="container mx-auto px-4 py-4">
@@ -54,8 +55,11 @@ export function Navigation() {
               <span className="font-bold text-xl text-primary">BoxMate</span>
             </Link>
 
-            {/* Settings Dropdown */}
-            <SettingsDropdown />
+            {/* Theme Toggle and Settings Dropdown */}
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <SettingsDropdown />
+            </div>
           </div>
 
           {/* Second Row: Search Bar */}
@@ -84,8 +88,9 @@ export function Navigation() {
           </Suspense>
         </div>
 
-        {/* Settings Dropdown */}
-        <div className="flex-shrink-0">
+        {/* Theme Toggle and Settings Dropdown */}
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <ThemeToggle />
           <SettingsDropdown />
         </div>
       </div>

@@ -42,7 +42,7 @@ export function SearchBar({ onSearch, placeholder = "Sök produkter...", classNa
           placeholder={placeholder}
           value={query}
           onChange={handleInputChange}
-          className="pl-10 pr-10 h-11"
+          className="pl-10 pr-10 h-11 bg-background border-border/50 focus:bg-background focus:border-primary/50 transition-all duration-200"
         />
         {query && (
           <Button

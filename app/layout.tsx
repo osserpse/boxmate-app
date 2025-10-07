@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Fira_Sans } from 'next/font/google';
 import './globals.css';
+import { ThemeProvider } from '@/components/theme-provider';
 
 const firaSans = Fira_Sans({
   subsets: ['latin'],
@@ -26,9 +27,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={firaSans.variable}>
+    <html lang="en" className={firaSans.variable} suppressHydrationWarning>
       <body className={`${firaSans.className} antialiased`}>
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

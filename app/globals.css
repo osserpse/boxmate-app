@@ -44,6 +44,11 @@
     --info: var(--tw-blue-500);
     --info-foreground: var(--tw-stone-50);
 
+    /* Navigation Gradient Colors */
+    --nav-gradient-start: var(--tw-stone-200);
+    --nav-gradient-middle: var(--tw-stone-200);
+    --nav-gradient-end: var(--tw-stone-50);
+
     --radius: 12px;
   }
 
@@ -72,7 +77,7 @@
     --popover: var(--tw-stone-800);
     --popover-foreground: var(--tw-stone-100);
 
-    --muted: var(--tw-stone-700);
+    --muted: var(--tw-stone-800);
     --muted-foreground: var(--tw-stone-300);
 
     --destructive: var(--tw-red-600);
@@ -85,6 +90,11 @@
     --warning-foreground: var(--tw-stone-900);
     --info: var(--tw-blue-400);
     --info-foreground: var(--tw-stone-50);
+
+    /* Navigation Gradient Colors for Dark Mode */
+    --nav-gradient-start: var(--tw-emerald-950);
+    --nav-gradient-middle: var(--tw-emerald-950);
+    --nav-gradient-end: var(--tw-emerald-900);
   }
 }
 

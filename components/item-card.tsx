@@ -69,11 +69,11 @@ export function ItemCard({ item }: ItemCardProps) {
         </div>
 
         <CardContent className="p-4">
-          <h3 className="font-semibold text-lg mb-2 line-clamp-2">{item.name}</h3>
+          <h3 className="font-semibold text-lg mb-2 line-clamp-2 text-foreground">{item.name}</h3>
 
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
             <MapPin className="w-4 h-4" />
-            <span className="font-medium">{item.lagerplats}.</span>
+            <span className="font-medium text-foreground">{item.lagerplats}.</span>
             {item.lokal && (
               <span className="text-xs">{item.lokal}</span>
             )}
