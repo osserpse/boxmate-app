@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { DollarSign, ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import { DollarSign, ArrowLeft, Eye, EyeOff, ChevronDown, FileText, Settings, ExternalLink, Star } from 'lucide-react';
 import Link from 'next/link';
 import { addItem, updateItem, AddItemRequest } from '@/lib/actions';
 import { ConditionDropdown } from '@/components/ui/condition-dropdown';
@@ -32,8 +32,25 @@ export function SellForm({ itemId }: SellFormProps) {
   const [existingItem, setExistingItem] = useState<Item | null>(null);
   const [existingPhotos, setExistingPhotos] = useState<string[]>([]);
   const [hiddenPhotos, setHiddenPhotos] = useState<Set<number>>(new Set());
+  const [primaryImageIndex, setPrimaryImageIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (isDropdownOpen && !target.closest('.dropdown-container')) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isDropdownOpen]);
 
   // Fetch existing item data when editing
   useEffect(() => {
@@ -74,6 +91,11 @@ export function SellForm({ itemId }: SellFormProps) {
             }
 
             setExistingPhotos(photos);
+
+            // Set primary image (first visible image or first image if none are hidden)
+            if (photos.length > 0) {
+              setPrimaryImageIndex(0);
+            }
 
             // Populate form with existing data
             setFormData({
@@ -121,6 +143,28 @@ export function SellForm({ itemId }: SellFormProps) {
     });
   };
 
+  const setPrimaryImage = (index: number) => {
+    setPrimaryImageIndex(index);
+  };
+
+  const handleDropdownAction = (action: string) => {
+    setIsDropdownOpen(false);
+    switch (action) {
+      case 'blocket':
+        // TODO: Implement Blocket integration
+        console.log('Skicka till Blocket');
+        break;
+      case 'pdf':
+        // TODO: Implement PDF generation
+        console.log('Skapa PDF');
+        break;
+      case 'settings':
+        // TODO: Implement settings
+        console.log('Inställningar');
+        break;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -143,7 +187,17 @@ export function SellForm({ itemId }: SellFormProps) {
 
     try {
       // Use existing photos, filtering out hidden ones
-      const visiblePhotos = existingPhotos.filter((_, index) => !hiddenPhotos.has(index));
+      let visiblePhotos = existingPhotos.filter((_, index) => !hiddenPhotos.has(index));
+
+      // Reorder photos to put primary image first
+      if (visiblePhotos.length > 0 && primaryImageIndex < existingPhotos.length) {
+        const primaryPhoto = existingPhotos[primaryImageIndex];
+        if (!hiddenPhotos.has(primaryImageIndex) && visiblePhotos.includes(primaryPhoto)) {
+          // Remove primary photo from its current position and add it to the beginning
+          visiblePhotos = visiblePhotos.filter(photo => photo !== primaryPhoto);
+          visiblePhotos.unshift(primaryPhoto);
+        }
+      }
 
       // Send data to server action
       const addData = {
@@ -229,19 +283,35 @@ export function SellForm({ itemId }: SellFormProps) {
                   <div className="grid grid-cols-4 gap-4">
                     {existingPhotos.map((photoUrl, index) => (
                       <div key={index} className="relative aspect-square bg-secondary rounded-lg overflow-hidden group">
-                        <Image
-                          src={photoUrl}
-                          alt={`Produktbild ${index + 1}`}
-                          fill
-                          sizes="(max-width: 768px) 25vw, 200px"
-                          className={`object-cover transition-opacity ${
-                            hiddenPhotos.has(index) ? 'opacity-50' : 'opacity-100'
-                          }`}
-                        />
                         <button
                           type="button"
                           onClick={() => togglePhotoVisibility(index)}
-                          className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white p-1 rounded-full transition-colors"
+                          className="absolute inset-0 w-full h-full cursor-pointer hover:ring-2 hover:ring-primary/50 transition-all"
+                        >
+                          <Image
+                            src={photoUrl}
+                            alt={`Produktbild ${index + 1}`}
+                            fill
+                            sizes="(max-width: 768px) 25vw, 200px"
+                            className={`object-cover transition-opacity ${
+                              hiddenPhotos.has(index) ? 'opacity-50' : 'opacity-100'
+                            }`}
+                          />
+                          {hiddenPhotos.has(index) && (
+                            <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                              <span className="text-white text-xs font-medium">Dold</span>
+                            </div>
+                          )}
+                        </button>
+
+                        {/* Eye icon for visibility toggle */}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            togglePhotoVisibility(index);
+                          }}
+                          className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white p-1 rounded-full transition-colors z-10"
                         >
                           {hiddenPhotos.has(index) ? (
                             <EyeOff className="w-4 h-4" />
@@ -249,16 +319,34 @@ export function SellForm({ itemId }: SellFormProps) {
                             <Eye className="w-4 h-4" />
                           )}
                         </button>
-                        {hiddenPhotos.has(index) && (
-                          <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                            <span className="text-white text-xs font-medium">Dold</span>
+
+                        {/* Star icon for primary image selection */}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setPrimaryImage(index);
+                          }}
+                          className={`absolute top-2 left-2 p-1 rounded-full transition-colors z-10 ${
+                            primaryImageIndex === index
+                              ? 'bg-yellow-500 text-white'
+                              : 'bg-black/50 hover:bg-black/70 text-white'
+                          }`}
+                        >
+                          <Star className={`w-4 h-4 ${primaryImageIndex === index ? 'fill-current' : ''}`} />
+                        </button>
+
+                        {/* Primary image indicator */}
+                        {primaryImageIndex === index && (
+                          <div className="absolute bottom-2 left-2 bg-yellow-500 text-white px-2 py-1 rounded text-xs font-medium">
+                            Huvudbild
                           </div>
                         )}
                       </div>
                     ))}
                   </div>
                   <p className="text-sm text-muted-foreground mt-2">
-                    Klicka på ögat för att dölja/visa bilder i annonsen
+                    Klicka på bilden för att dölja/visa i annonsen. Klicka på stjärnan för att välja huvudbild.
                   </p>
                 </CardContent>
               </Card>
@@ -376,41 +464,76 @@ export function SellForm({ itemId }: SellFormProps) {
                     Pris (kr), inklusive moms
                   </label>
                   <div className="relative">
-                    <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                     <Input
                       id="value"
                       type="number"
                       placeholder="0"
                       value={formData.value}
                       onChange={(e) => handleInputChange('value', e.target.value)}
-                      className="h-11 pl-10"
+                      className="h-11 pl-2 text-base"
                     />
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Betrakta liknande produkter vid prissättning
-                  </p>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      checked={formData.negotiable}
-                      onChange={(e) => handleInputChange('negotiable', e.target.checked)}
-                      className="rounded border-border"
-                    />
-                    <span className="text-sm text-muted-foreground">Pris är förhandlingsbart</span>
-                  </label>
-                </div>
               </CardContent>
             </Card>
 
             {/* Actions */}
-            <div className="space-y-3">
-              <Button type="submit" size="lg" className="w-full bg-primary hover:bg-primary/90" disabled={isLoading}>
-                {isLoading ? 'Sparar...' : (isNewItem ? 'Publicera annons' : 'Uppdatera annons')}
-              </Button>
+            <div className="flex flex-col space-y-3">
+              {/* Main Action Buttons */}
+              <div className="flex gap-3">
+                <Button type="button" size="lg" variant="outline" className="flex-1" disabled={isLoading}>
+                  {isLoading ? 'Sparar...' : (isNewItem ? 'Publicera annons' : 'Spara annons')}
+                </Button>
+                <Button type="button" variant="outline" size="lg" className="flex-1">
+                  Förhandsgranska
+                </Button>
+              </div>
 
+              {/* Dropdown Actions */}
+              <div className="relative dropdown-container">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="lg"
+                  className="w-full justify-between bg-primary hover:bg-primary/90"
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                >
+                  <span className="text-primary-foreground">Publicera annons</span>
+                  <ChevronDown className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                </Button>
+
+                {isDropdownOpen && (
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-border rounded-md shadow-lg z-10">
+                    <button
+                      type="button"
+                      onClick={() => handleDropdownAction('blocket')}
+                      className="w-full px-4 py-3 text-left hover:bg-muted flex items-center gap-3 first:rounded-t-md"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      <span>Skicka till Blocket</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDropdownAction('pdf')}
+                      className="w-full px-4 py-3 text-left hover:bg-muted flex items-center gap-3"
+                    >
+                      <FileText className="w-4 h-4" />
+                      <span>Skapa PDF</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDropdownAction('settings')}
+                      className="w-full px-4 py-3 text-left hover:bg-muted flex items-center gap-3 last:rounded-b-md"
+                    >
+                      <Settings className="w-4 h-4" />
+                      <span>Inställningar</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Cancel Button */}
               <Link href="/dashboard">
                 <Button type="button" variant="outline" size="lg" className="w-full">
                   Avbryt
