@@ -256,6 +256,15 @@
    - Document any issues found
    - Provide clear status updates
 
+3. **Build Verification**
+   - ALWAYS run `npm run build` or `yarn build` after making changes
+   - Check for TypeScript errors, linting issues, and build failures
+   - Fix any Suspense boundary errors with `useSearchParams()` or other client hooks
+   - Ensure all pages build successfully before considering work complete
+   - Verify no server-side rendering conflicts with client components
+   - Test that the app is ready for production deployment (Vercel, etc.)
+   - If build fails, fix errors immediately before proceeding
+
 ## Goals
 
 1. Primary
