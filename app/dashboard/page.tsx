@@ -119,11 +119,10 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-stone-900 mb-4">
-            Upptäck fantastiska produkter nära dig
+            Få överblick över Acme Groups saker
           </h1>
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Från elektronik till möbler, hitta vad du behöver eller sälj vad du inte längre använder.
-            Anslut med din lokala gemenskap genom BoxMate.
+            Se vad som redan finns, vad som används och vad som kan gå vidare. Markera för återbruk eller försäljning – och undvik onödiga inköp.
           </p>
 
           {/* <div className="flex gap-6 justify-center">
@@ -172,7 +171,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       <footer className="bg-stone-50 border-t mt-16">
         <div className="w-full px-8 py-8">
           <div className="text-center text-muted-foreground">
-            <p>&copy; 2024 BoxMate. Gör lokal köp och sälj roligt och tillgängligt.</p>
+            <p><b>&copy; 2025 BoxMate.</b> Överblick som sparar både pengar och planet.</p>
           </div>
         </div>
       </footer>

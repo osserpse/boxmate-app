@@ -65,7 +65,7 @@ export function DashboardItemsManager({ initialItems, initialSearchQuery = '' }:
       {/* Featured Items Header with Add Button */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-3xl font-bold text-stone-900">Utvalda produkter</h2>
+          <h2 className="text-lg sm:text-2xl font-bold text-stone-900">Senast tillagda produkter</h2>
           {searchQuery && (
             <p className="text-sm text-muted-foreground mt-1">
               Visar {filteredItems.length} av {items.length} produkter för &quot;{searchQuery}&quot;
@@ -77,12 +77,12 @@ export function DashboardItemsManager({ initialItems, initialSearchQuery = '' }:
             <DialogTrigger asChild>
               <Button className="bg-lime-500 hover:bg-lime-600">
                 <Plus className="w-4 h-4 mr-2" />
-                Lägg till
+                Lägg till produkt
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>Sälj ny produkt</DialogTitle>
+                <DialogTitle>Lägg till ny produkt</DialogTitle>
               </DialogHeader>
               <AddItemForm onItemAdded={handleItemAdded} />
             </DialogContent>
@@ -109,7 +109,7 @@ export function DashboardItemsManager({ initialItems, initialSearchQuery = '' }:
         ) : (
           <div className="col-span-full text-center py-12">
             <p className="text-muted-foreground text-lg">
-              Inga produkter tillgängliga
+              Inga produkter är registrerade ännu
             </p>
             <p className="text-sm text-muted-foreground mt-2">
               Lägg till din första produkt för att komma igång

@@ -69,14 +69,19 @@ export function ItemActions({
   };
 
   return (
-    <Card className="border-stone-200">
-      <CardHeader>
-        <CardTitle className="text-lg">Hantera produkt</CardTitle>
-      </CardHeader>
-      <CardContent className="p-4 space-y-3">
+    <div className="flex items-center justify-between gap-4">
+      {/* Left side: Sell button */}
+      <Link href={`/sell/${itemId}`}>
+        <Button className="bg-lime-500 hover:bg-lime-600">
+          ↄ Sälj vidare
+        </Button>
+      </Link>
+
+      {/* Right side: Edit and Delete buttons */}
+      <div className="flex items-center gap-3">
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
           <DialogTrigger asChild>
-            <Button variant="outline" className="w-full justify-start">
+            <Button variant="outline">
               <Edit className="w-4 h-4 mr-2" />
               Redigera
             </Button>
@@ -105,17 +110,11 @@ export function ItemActions({
           </DialogContent>
         </Dialog>
 
-        <Link href={`/sell/${itemId}`}>
-          <Button variant="outline" className="w-full justify-start">
-            ↄ Sälj vidare
-          </Button>
-        </Link>
-
         <Dialog>
           <DialogTrigger asChild>
             <Button
               variant="outline"
-              className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
+              className="text-red-600 hover:text-red-700 hover:bg-red-50"
               disabled={isDeleting}
             >
               <Trash2 className="w-4 h-4 mr-2" />
@@ -146,7 +145,8 @@ export function ItemActions({
             </div>
           </DialogContent>
         </Dialog>
-      </CardContent>
-    </Card>
+      </div>
+
+    </div>
   );
 }

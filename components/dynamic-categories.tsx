@@ -27,7 +27,7 @@ export function DynamicCategories({ categories }: DynamicCategoriesProps) {
 
   return (
     <div className="mb-8">
-      <h2 className="text-3xl font-bold text-stone-900 mb-6">Bläddra efter kategori</h2>
+      <h2 className="text-lg sm:text-2xl  font-bold text-stone-900 mb-6">Bläddra efter kategori</h2>
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
         {categories.map((cat, index) => (
           <div

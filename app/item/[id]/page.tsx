@@ -189,32 +189,20 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
                   </Button>
                 </div>
               </div>
-              <div className="flex items-center gap-2 text-muted-foreground mb-4">
-                <MapPin className="w-5 h-5" />
-                <div className="flex flex-col">
-                  <span className="text-lg">{item.lagerplats}</span>
-                  {item.lokal && (
-                    <span className="text-sm text-muted-foreground">Lokal: {item.lokal}</span>
-                  )}
-                  {item.hyllplats && (
-                    <span className="text-sm text-muted-foreground">Hyllplats: {item.hyllplats}</span>
-                  )}
-                </div>
-              </div>
-              <div className="flex items-baseline gap-2">
+              <div className="flex flex-col items-baseline">
                 <span className="text-5xl font-bold text-primary">
                   {formatCurrency(item.value)}
                 </span>
+                <span className="text-sm text-muted-foreground">Uppskattat värde</span>
               </div>
 
               {/* Category Information */}
-              <div className="flex items-center gap-2 text-muted-foreground">
+              <div className="flex items-center gap-4 text-muted-foreground mt-4">
                 <span className="text-sm">
-                  <span className="font-medium">Kategori:</span> {getCategoryLabel(item.category || 'other')}
+                  <span className="font-medium">Tillgång i kategori:</span> {getCategoryLabel(item.category || 'other')}
                 </span>
                 {item.category === 'electronics' && item.subcategory && (
                   <>
-                    <span>•</span>
                     <span className="text-sm">
                       <span className="font-medium">Underkategori:</span> {getSubcategoryLabel(item.subcategory)}
                     </span>
@@ -222,7 +210,6 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
                 )}
                 {item.condition && (
                   <>
-                    <span>•</span>
                     <span className="text-sm">
                       <span className="font-medium">Skick:</span> {getConditionLabel(item.condition)}
                     </span>
@@ -241,9 +228,22 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
             </div>
 
             <Separator />
+              <div className="flex items-center gap-2 text-muted-foreground mb-4">
+                <MapPin className="w-5 h-5" />
+                <div className="flex items-center gap-2">
+                  <span className="text-base">{item.lagerplats}</span>
+                  {item.lokal && (
+                    <span className="text-base text-muted-foreground">Lokal: {item.lokal}</span>
+                  )}
+                  {item.hyllplats && (
+                    <span className="text-base text-muted-foreground">Hyllplats: {item.hyllplats}</span>
+                  )}
+                </div>
+              </div>
+            <Separator />
 
             {/* Seller Info */}
-            <Card className="bg-stone-50 border-stone-200">
+            {/* <Card className="bg-stone-50 border-stone-200">
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-lime-100 rounded-full flex items-center justify-center">
@@ -261,17 +261,8 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
                   </Button>
                 </div>
               </CardContent>
-            </Card>
+            </Card> */}
 
-            {/* Action Buttons */}
-            <div className="space-y-3">
-              <Button size="lg" className="w-full bg-lime-500 hover:bg-lime-600">
-                Köp nu
-              </Button>
-              <Button size="lg" variant="outline" className="w-full">
-                Gör bud
-              </Button>
-            </div>
 
             {/* Item Actions */}
             <ItemActions
@@ -288,6 +279,8 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
               itemCondition={item.condition}
             />
 
+            <Separator />
+
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
@@ -300,7 +293,7 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
         {/* Related Items */}
         {relatedItems.length > 0 && (
           <div className="mt-12">
-            <h2 className="text-2xl font-bold mb-6">Liknande produkter</h2>
+            <h2 className="text-base sm:text-2xl font-bold mb-6">Liknande produkter</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {relatedItems.map((relatedItem) => (
                 <Link key={relatedItem.id} href={`/item/${relatedItem.id}`}>
