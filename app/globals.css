@@ -31,7 +31,7 @@
     --popover-foreground: var(--tw-stone-900);
 
     --muted: var(--tw-stone-100);
-    --muted-foreground: var(--tw-stone-600);
+    --muted-foreground: var(--tw-stone-500);
 
     --destructive: var(--tw-red-500);
     --destructive-foreground: var(--tw-stone-50);
