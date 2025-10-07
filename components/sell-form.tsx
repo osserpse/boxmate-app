@@ -41,6 +41,7 @@ export function SellForm({ itemId }: SellFormProps) {
   const [showPdfView, setShowPdfView] = useState(false);
   const [savedAdId, setSavedAdId] = useState<string | null>(null);
   const [isMarkedAsSold, setIsMarkedAsSold] = useState(false);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -152,6 +153,17 @@ export function SellForm({ itemId }: SellFormProps) {
     setPrimaryImageIndex(index);
   };
 
+  const getConditionLabel = (condition: string) => {
+    const conditionLabels: { [key: string]: string } = {
+      'new': 'Nytt skick - Helt ny',
+      'excellent': 'Mycket bra skick - Som ny',
+      'good': 'Bra skick - Sparsamt använd',
+      'fair': 'Okej skick - Synligt använd',
+      'broken': 'Funkar inte - Kan fixas'
+    };
+    return conditionLabels[condition] || condition;
+  };
+
   const handleDropdownAction = (action: string) => {
     setIsDropdownOpen(false);
     switch (action) {
@@ -171,22 +183,227 @@ export function SellForm({ itemId }: SellFormProps) {
     }
   };
 
-  const handlePublishClick = () => {
+  const handlePublishClick = async () => {
     if (!savedAdId) {
       // If no ad is saved yet, save as draft first
+      console.log('No saved ad found, saving as draft first...');
       const form = document.querySelector('form') as HTMLFormElement;
       if (form) {
         form.requestSubmit();
       }
       return;
     }
+    // If ad is already saved, open the publish modal
+    console.log('Opening publish modal for saved ad:', savedAdId);
     setShowPublishModal(true);
   };
 
-  const handlePdfSave = () => {
-    // TODO: Implement actual PDF generation
-    console.log('Generating PDF for ad:', savedAdId);
-    alert('PDF-generering kommer snart!');
+  const handlePdfSave = async () => {
+    try {
+      setIsGeneratingPdf(true);
+      console.log('Generating PDF for ad:', savedAdId);
+
+      // Import jsPDF and html2canvas dynamically
+      const [{ default: jsPDF }, { default: html2canvas }] = await Promise.all([
+        import('jspdf'),
+        import('html2canvas')
+      ]);
+
+      // Create a temporary PDF-optimized content element
+      const pdfContainer = document.createElement('div');
+      pdfContainer.style.position = 'absolute';
+      pdfContainer.style.left = '-9999px';
+      pdfContainer.style.top = '0';
+      pdfContainer.style.width = '210mm'; // A4 width
+      pdfContainer.style.maxHeight = '267mm'; // A4 height minus margins (297mm - 30mm)
+      pdfContainer.style.backgroundColor = '#ffffff';
+      pdfContainer.style.fontFamily = 'Arial, sans-serif';
+      pdfContainer.style.fontSize = '12px';
+      pdfContainer.style.lineHeight = '1.4';
+      pdfContainer.style.color = '#000000';
+      pdfContainer.style.padding = '15mm'; // Reduced margins
+      pdfContainer.style.boxSizing = 'border-box';
+      pdfContainer.style.overflow = 'hidden'; // Prevent content from exceeding page height
+
+      // Create PDF-optimized content
+      const visiblePhotos = existingPhotos.filter((_, index) => !hiddenPhotos.has(index));
+      const primaryPhoto = visiblePhotos[primaryImageIndex] || visiblePhotos[0];
+
+      console.log('PDF Generation Debug:');
+      console.log('- Total existing photos:', existingPhotos.length);
+      console.log('- Hidden photos:', Array.from(hiddenPhotos));
+      console.log('- Visible photos:', visiblePhotos.length);
+      console.log('- Primary photo:', primaryPhoto);
+      console.log('- Additional photos:', visiblePhotos.slice(1, 4));
+
+      pdfContainer.innerHTML = `
+        <div style="text-align: center; margin-bottom: 15px;">
+          <h1 style="font-size: 22px; font-weight: bold; margin: 0 0 6px 0; color: #1a1a1a;">
+            ${formData.name}
+          </h1>
+          <p style="font-size: 13px; color: #666; margin: 0;">
+            ${formData.lagerplats}
+          </p>
+        </div>
+
+        ${primaryPhoto ? `
+          <div style="text-align: center; margin-bottom: 15px;">
+            <img src="${primaryPhoto}"
+                 style="max-width: 100mm; max-height: 60mm; object-fit: contain; border: 1px solid #ddd;"
+                 alt="${formData.name}" />
+          </div>
+        ` : ''}
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+          <div>
+            <h3 style="font-size: 14px; font-weight: bold; margin: 0 0 4px 0; color: #333;">
+              Kategori
+            </h3>
+            <p style="font-size: 12px; margin: 0; color: #666;">
+              ${formData.category === 'electronics' ? 'Elektronik' :
+                formData.category === 'business' ? 'Affärsverksamhet' : 'Övrigt'}
+            </p>
+          </div>
+          <div>
+            <h3 style="font-size: 14px; font-weight: bold; margin: 0 0 4px 0; color: #333;">
+              Skick
+            </h3>
+            <p style="font-size: 12px; margin: 0; color: #666;">
+              ${getConditionLabel(formData.condition)}
+            </p>
+          </div>
+          ${formData.value ? `
+            <div>
+              <h3 style="font-size: 14px; font-weight: bold; margin: 0 0 4px 0; color: #333;">
+                Pris
+              </h3>
+              <p style="font-size: 16px; font-weight: bold; margin: 0; color: #1a1a1a;">
+                ${formData.value} kr
+              </p>
+            </div>
+          ` : ''}
+        </div>
+
+        ${formData.description ? `
+          <div style="margin-bottom: 12px;">
+            <h3 style="font-size: 13px; font-weight: bold; margin: 0 0 6px 0; color: #333;">
+              Beskrivning
+            </h3>
+            <p style="font-size: 10px; margin: 0; color: #444; line-height: 1.4; white-space: pre-wrap; max-height: 60mm; overflow: hidden;">
+              ${formData.description}
+            </p>
+          </div>
+        ` : ''}
+
+        ${visiblePhotos.length > 1 ? `
+          <div style="margin-bottom: 12px;">
+            <h3 style="font-size: 13px; font-weight: bold; margin: 0 0 8px 0; color: #333;">
+              Fler bilder (${visiblePhotos.length - 1} bilder)
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;">
+              ${visiblePhotos.slice(1, 4).map((photo, index) => `
+                <div style="position: relative; aspect-ratio: 1; border: 1px solid #ddd; background: #f5f5f5; overflow: hidden;">
+                  <img src="${photo}"
+                       style="width: 100%; height: 100%; object-fit: cover; display: block;"
+                       alt="${formData.name} ${index + 2}"
+                       onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                  <div style="display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; align-items: center; justify-content: center; background: #f5f5f5; color: #999; font-size: 10px;">
+                    Bild ${index + 2}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        <div style="text-align: center; margin-top: 15px; padding-top: 10px; border-top: 1px solid #eee;">
+          <p style="font-size: 9px; color: #999; margin: 0;">
+            Genererad ${new Date().toLocaleDateString('sv-SE')} • BoxMate
+          </p>
+        </div>
+      `;
+
+      // Add to document temporarily
+      document.body.appendChild(pdfContainer);
+
+      // Wait for images to load before capturing
+      const images = pdfContainer.querySelectorAll('img');
+      const imagePromises = Array.from(images).map(img => {
+        return new Promise((resolve) => {
+          if (img.complete) {
+            resolve(img);
+          } else {
+            img.onload = () => resolve(img);
+            img.onerror = () => resolve(img); // Resolve even if image fails to load
+          }
+        });
+      });
+
+      // Wait for all images to load (or fail)
+      await Promise.all(imagePromises);
+
+      // Create canvas from the content
+      const canvas = await html2canvas(pdfContainer, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        width: pdfContainer.offsetWidth,
+        height: pdfContainer.offsetHeight,
+        logging: false,
+        removeContainer: false
+      });
+
+      // Remove temporary element
+      document.body.removeChild(pdfContainer);
+
+      // Create PDF with margins and multi-page support
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = 210;
+      const pageHeight = 297;
+      const margin = 10; // 10mm margins
+      const contentWidth = pageWidth - (margin * 2);
+      const contentHeight = pageHeight - (margin * 2);
+
+      // Calculate image dimensions to fit within margins
+      const imgWidth = contentWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      // Handle multi-page content
+      let heightLeft = imgHeight;
+      let position = 0;
+      let pageNumber = 1;
+
+      // Add first page
+      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', margin, margin, imgWidth, imgHeight);
+      heightLeft -= contentHeight;
+
+      // Add additional pages if content is too tall
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pageNumber++;
+        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', margin, position, imgWidth, imgHeight);
+        heightLeft -= contentHeight;
+      }
+
+      // Generate filename
+      const filename = `${formData.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_annons.pdf`;
+
+      // Save the PDF
+      pdf.save(filename);
+
+      console.log('PDF generated successfully:', filename);
+
+      // Close the modal
+      setShowPdfView(false);
+
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Fel vid generering av PDF. Försök igen.');
+    } finally {
+      setIsGeneratingPdf(false);
+    }
   };
 
   const handleMarkAsSold = async (checked: boolean) => {
@@ -584,12 +801,11 @@ export function SellForm({ itemId }: SellFormProps) {
                   type="button"
                   variant="outline"
                   size="lg"
-                  className="w-full justify-between bg-primary hover:bg-primary/90"
+                  className="w-full bg-primary hover:bg-primary/90"
                   onClick={handlePublishClick}
                   disabled={isMarkedAsSold}
                 >
                   <span className="text-primary-foreground">Publicera annons</span>
-                  <ChevronDown className="w-4 h-4" />
                 </Button>
 
               </div>
@@ -736,7 +952,7 @@ export function SellForm({ itemId }: SellFormProps) {
             </div>
             <div className="p-6 overflow-y-auto flex-1 min-h-0">
               {/* PDF Content */}
-              <div className="bg-white p-8 shadow-lg">
+              <div className="pdf-content bg-white p-8 shadow-lg">
                 <div className="text-center mb-8">
                   <h1 className="text-3xl font-bold mb-2">{formData.name}</h1>
                   <p className="text-lg text-muted-foreground">{formData.lagerplats}</p>
@@ -768,7 +984,7 @@ export function SellForm({ itemId }: SellFormProps) {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-2">Skick</h3>
-                    <p className="text-muted-foreground">{formData.condition}</p>
+                    <p className="text-muted-foreground">{getConditionLabel(formData.condition)}</p>
                   </div>
                   {formData.value && (
                     <div>
@@ -821,8 +1037,9 @@ export function SellForm({ itemId }: SellFormProps) {
               <Button
                 onClick={handlePdfSave}
                 className="bg-primary hover:bg-primary/90"
+                disabled={isGeneratingPdf}
               >
-                Spara som PDF
+                {isGeneratingPdf ? 'Genererar PDF...' : 'Spara som PDF'}
               </Button>
             </div>
           </div>
