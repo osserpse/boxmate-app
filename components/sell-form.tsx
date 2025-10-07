@@ -40,6 +40,7 @@ export function SellForm({ itemId }: SellFormProps) {
   const [showPublishModal, setShowPublishModal] = useState(false);
   const [showPdfView, setShowPdfView] = useState(false);
   const [savedAdId, setSavedAdId] = useState<string | null>(null);
+  const [isMarkedAsSold, setIsMarkedAsSold] = useState(false);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -186,6 +187,55 @@ export function SellForm({ itemId }: SellFormProps) {
     // TODO: Implement actual PDF generation
     console.log('Generating PDF for ad:', savedAdId);
     alert('PDF-generering kommer snart!');
+  };
+
+  const handleMarkAsSold = async (checked: boolean) => {
+    if (checked && !isNewItem) {
+      try {
+        setIsLoading(true);
+        setError(''); // Clear any previous errors
+
+        const { createClient } = await import('@supabase/supabase-js');
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+        const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
+        console.log('Attempting to mark item as sold:', itemId);
+
+        // Update item status to sold in the items table
+        const { data, error } = await supabase
+          .from('items')
+          .update({
+            status: 'sold',
+            sold_at: new Date().toISOString()
+          })
+          .eq('id', itemId)
+          .select();
+
+        if (error) {
+          console.error('Database error updating item status:', error);
+          setError(`Kunde inte markera produkten som såld: ${error.message}`);
+          return; // Don't set checkbox as checked
+        }
+
+        if (data && data.length > 0) {
+          console.log('Item marked as sold successfully:', data[0]);
+          setIsMarkedAsSold(true);
+        } else {
+          console.error('No item found with ID:', itemId);
+          setError('Produkten hittades inte');
+        }
+      } catch (err) {
+        console.error('Error in handleMarkAsSold:', err);
+        setError('Något gick fel när produkten markerades som såld');
+      } finally {
+        setIsLoading(false);
+      }
+    } else if (!checked) {
+      // If unchecking, just update the state
+      setIsMarkedAsSold(false);
+      setError(''); // Clear any errors
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -386,6 +436,7 @@ export function SellForm({ itemId }: SellFormProps) {
                     value={formData.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
                     className="h-11"
+                    disabled={isMarkedAsSold}
                   />
                 </div>
 
@@ -398,6 +449,7 @@ export function SellForm({ itemId }: SellFormProps) {
                     value={formData.category}
                     onChange={(e) => handleInputChange('category', e.target.value)}
                     className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={isMarkedAsSold}
                   >
                     {categories.map((cat) => (
                       <option key={cat.value} value={cat.value}>
@@ -417,6 +469,7 @@ export function SellForm({ itemId }: SellFormProps) {
                       value={formData.subcategory}
                       onChange={(e) => handleInputChange('subcategory', e.target.value)}
                       className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      disabled={isMarkedAsSold}
                     >
                       <option value="">Välj underkategori</option>
                       {electronicsSubcategories.map((subcat) => (
@@ -436,6 +489,7 @@ export function SellForm({ itemId }: SellFormProps) {
                     value={formData.condition}
                     onChange={(value) => handleInputChange('condition', value)}
                     placeholder="Välj från listan"
+                    disabled={isMarkedAsSold}
                   />
                 </div>
 
@@ -450,6 +504,7 @@ export function SellForm({ itemId }: SellFormProps) {
                     onChange={(e) => handleInputChange('description', e.target.value)}
                     rows={4}
                     className="resize-none"
+                    disabled={isMarkedAsSold}
                   />
                 </div>
 
@@ -463,6 +518,7 @@ export function SellForm({ itemId }: SellFormProps) {
                     value={formData.lagerplats}
                     onChange={(e) => handleInputChange('lagerplats', e.target.value)}
                     className="h-11"
+                    disabled={isMarkedAsSold}
                   />
                 </div>
               </CardContent>
@@ -482,14 +538,15 @@ export function SellForm({ itemId }: SellFormProps) {
                     Pris (kr), inklusive moms
                   </label>
                   <div className="relative">
-                    <Input
-                      id="value"
-                      type="number"
-                      placeholder="0"
-                      value={formData.value}
-                      onChange={(e) => handleInputChange('value', e.target.value)}
-                      className="h-11 pl-2 text-base"
-                    />
+                      <Input
+                        id="value"
+                        type="number"
+                        placeholder="0"
+                        value={formData.value}
+                        onChange={(e) => handleInputChange('value', e.target.value)}
+                        className="h-11 pl-2 text-base"
+                        disabled={isMarkedAsSold}
+                      />
                   </div>
                 </div>
 
@@ -500,10 +557,23 @@ export function SellForm({ itemId }: SellFormProps) {
             <div className="flex flex-col space-y-3">
               {/* Main Action Buttons */}
               <div className="flex gap-3">
-                <Button type="submit" size="lg" variant="outline" className="flex-1" disabled={isLoading}>
+                <Button
+                  type="submit"
+                  size="lg"
+                  variant="outline"
+                  className="flex-1"
+                  disabled={isLoading || isMarkedAsSold}
+                >
                   {isLoading ? 'Sparar...' : 'Spara som utkast'}
                 </Button>
-                <Button type="button" variant="outline" size="lg" className="flex-1">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="lg"
+                  className="flex-1"
+                  onClick={() => setShowPdfView(true)}
+                  disabled={isMarkedAsSold}
+                >
                   Förhandsgranska
                 </Button>
               </div>
@@ -516,6 +586,7 @@ export function SellForm({ itemId }: SellFormProps) {
                   size="lg"
                   className="w-full justify-between bg-primary hover:bg-primary/90"
                   onClick={handlePublishClick}
+                  disabled={isMarkedAsSold}
                 >
                   <span className="text-primary-foreground">Publicera annons</span>
                   <ChevronDown className="w-4 h-4" />
@@ -529,6 +600,27 @@ export function SellForm({ itemId }: SellFormProps) {
                   Avbryt
                 </Button>
               </Link>
+
+              {/* Mark as Sold Checkbox */}
+              <div className="pt-4 border-t">
+                <label className="flex items-center space-x-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={isMarkedAsSold}
+                    onChange={(e) => handleMarkAsSold(e.target.checked)}
+                    className="w-4 h-4 text-primary bg-background border-border rounded focus:ring-primary focus:ring-2"
+                    disabled={isLoading}
+                  />
+                  <span className="text-sm font-medium text-foreground">
+                    Markera produkten som såld
+                  </span>
+                </label>
+                {isMarkedAsSold && (
+                  <p className="text-xs text-muted-foreground mt-2">
+                    Produkten är markerad som såld. Alla annonsfunktioner är inaktiverade.
+                  </p>
+                )}
+              </div>
             </div>
 
             {/* Success Message */}

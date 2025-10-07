@@ -67,6 +67,8 @@ export interface Item {
   category?: string
   subcategory?: string
   condition?: string
+  status?: string // 'available', 'sold', etc.
+  sold_at?: string
   created_at: string
 }
 

@@ -14,6 +14,7 @@ interface ConditionDropdownProps {
   onChange: (value: string) => void;
   placeholder?: string;
   className?: string;
+  disabled?: boolean;
 }
 
 const conditionOptions: ConditionOption[] = [
@@ -48,7 +49,8 @@ export function ConditionDropdown({
   value,
   onChange,
   placeholder = "Välj från listan",
-  className = ""
+  className = "",
+  disabled = false
 }: ConditionDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -77,7 +79,8 @@ export function ConditionDropdown({
     <div className={`relative ${className}`} ref={dropdownRef}>
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => !disabled && setIsOpen(!isOpen)}
+        disabled={disabled}
         className="flex h-11 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <span className={selectedOption ? "text-foreground" : "text-muted-foreground"}>
@@ -90,7 +93,7 @@ export function ConditionDropdown({
         )}
       </button>
 
-      {isOpen && (
+      {isOpen && !disabled && (
         <div className="absolute z-50 mt-1 w-full rounded-md border border-border bg-background shadow-lg">
           <div className="max-h-60 overflow-auto">
             {conditionOptions.map((option) => (
