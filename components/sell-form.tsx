@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { DollarSign, ArrowLeft, Eye, EyeOff, ChevronDown, FileText, Settings, ExternalLink, Star } from 'lucide-react';
+import { DollarSign, ArrowLeft, Eye, EyeOff, ChevronDown, FileText, Settings, ExternalLink, Star, X } from 'lucide-react';
 import Link from 'next/link';
 import { createAd, updateAd, AdRequest } from '@/lib/ad-actions';
 import { ConditionDropdown } from '@/components/ui/condition-dropdown';
@@ -37,6 +37,9 @@ export function SellForm({ itemId }: SellFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showPublishModal, setShowPublishModal] = useState(false);
+  const [showPdfView, setShowPdfView] = useState(false);
+  const [savedAdId, setSavedAdId] = useState<string | null>(null);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -154,16 +157,35 @@ export function SellForm({ itemId }: SellFormProps) {
       case 'blocket':
         // TODO: Implement Blocket integration
         console.log('Skicka till Blocket');
+        alert('Blocket integration kommer snart!');
         break;
       case 'pdf':
-        // TODO: Implement PDF generation
-        console.log('Skapa PDF');
+        setShowPdfView(true);
         break;
       case 'settings':
         // TODO: Implement settings
         console.log('Inställningar');
+        alert('Inställningar kommer snart!');
         break;
     }
+  };
+
+  const handlePublishClick = () => {
+    if (!savedAdId) {
+      // If no ad is saved yet, save as draft first
+      const form = document.querySelector('form') as HTMLFormElement;
+      if (form) {
+        form.requestSubmit();
+      }
+      return;
+    }
+    setShowPublishModal(true);
+  };
+
+  const handlePdfSave = () => {
+    // TODO: Implement actual PDF generation
+    console.log('Generating PDF for ad:', savedAdId);
+    alert('PDF-generering kommer snart!');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -218,9 +240,9 @@ export function SellForm({ itemId }: SellFormProps) {
       console.log('Result:', result);
 
       if (result.success && result.ad) {
-        console.log('Success! Redirecting to:', `/ad/${result.ad.id}`);
-        // Redirect to ad detail page (you may need to create this page)
-        window.location.href = `/ad/${result.ad.id}`;
+        console.log('Success! Ad saved as draft.');
+        setSavedAdId(result.ad.id);
+        // Don't redirect immediately - let user choose to publish or continue editing
       } else {
         console.error('Operation failed:', result.error);
         setError(result.error || 'Något gick fel');
@@ -493,40 +515,12 @@ export function SellForm({ itemId }: SellFormProps) {
                   variant="outline"
                   size="lg"
                   className="w-full justify-between bg-primary hover:bg-primary/90"
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  onClick={handlePublishClick}
                 >
                   <span className="text-primary-foreground">Publicera annons</span>
-                  <ChevronDown className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown className="w-4 h-4" />
                 </Button>
 
-                {isDropdownOpen && (
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-border rounded-md shadow-lg z-10">
-                    <button
-                      type="button"
-                      onClick={() => handleDropdownAction('blocket')}
-                      className="w-full px-4 py-3 text-left hover:bg-muted flex items-center gap-3 first:rounded-t-md"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      <span>Skicka till Blocket</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleDropdownAction('pdf')}
-                      className="w-full px-4 py-3 text-left hover:bg-muted flex items-center gap-3"
-                    >
-                      <FileText className="w-4 h-4" />
-                      <span>Skapa PDF</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleDropdownAction('settings')}
-                      className="w-full px-4 py-3 text-left hover:bg-muted flex items-center gap-3 last:rounded-b-md"
-                    >
-                      <Settings className="w-4 h-4" />
-                      <span>Inställningar</span>
-                    </button>
-                  </div>
-                )}
               </div>
 
               {/* Cancel Button */}
@@ -536,6 +530,13 @@ export function SellForm({ itemId }: SellFormProps) {
                 </Button>
               </Link>
             </div>
+
+            {/* Success Message */}
+            {savedAdId && (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                <p className="text-green-800 text-sm">✅ Annons sparad som utkast! Klicka på "Publicera annons" för att fortsätta.</p>
+              </div>
+            )}
 
             {/* Error Message */}
             {error && (
@@ -566,6 +567,175 @@ export function SellForm({ itemId }: SellFormProps) {
           </div>
         </form>
       </div>
+
+      {/* Publish Modal */}
+      {showPublishModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-background rounded-lg p-6 w-full max-w-md mx-4">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold">Publicera annons</h3>
+              <button
+                onClick={() => setShowPublishModal(false)}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <p className="text-muted-foreground mb-6">
+              Välj hur du vill publicera din annons:
+            </p>
+            <div className="space-y-3">
+              <button
+                onClick={() => {
+                  setShowPublishModal(false);
+                  handleDropdownAction('blocket');
+                }}
+                className="w-full p-4 border border-border rounded-lg hover:bg-muted flex items-center gap-3"
+              >
+                <ExternalLink className="w-5 h-5" />
+                <div className="text-left">
+                  <div className="font-medium">Skicka till Blocket</div>
+                  <div className="text-sm text-muted-foreground">Publicera automatiskt på Blocket</div>
+                </div>
+              </button>
+              <button
+                onClick={() => {
+                  setShowPublishModal(false);
+                  handleDropdownAction('pdf');
+                }}
+                className="w-full p-4 border border-border rounded-lg hover:bg-muted flex items-center gap-3"
+              >
+                <FileText className="w-5 h-5" />
+                <div className="text-left">
+                  <div className="font-medium">Skapa PDF</div>
+                  <div className="text-sm text-muted-foreground">Generera PDF för utskrift</div>
+                </div>
+              </button>
+              <button
+                onClick={() => {
+                  setShowPublishModal(false);
+                  handleDropdownAction('settings');
+                }}
+                className="w-full p-4 border border-border rounded-lg hover:bg-muted flex items-center gap-3"
+              >
+                <Settings className="w-5 h-5" />
+                <div className="text-left">
+                  <div className="font-medium">Inställningar</div>
+                  <div className="text-sm text-muted-foreground">API-nycklar och inställningar</div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* PDF View Modal */}
+      {showPdfView && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-background rounded-lg w-full max-w-4xl max-h-[95vh] flex flex-col">
+            <div className="flex justify-between items-center p-6 border-b flex-shrink-0">
+              <h3 className="text-lg font-semibold">Förhandsgranskning - PDF</h3>
+              <button
+                onClick={() => setShowPdfView(false)}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-6 overflow-y-auto flex-1 min-h-0">
+              {/* PDF Content */}
+              <div className="bg-white p-8 shadow-lg">
+                <div className="text-center mb-8">
+                  <h1 className="text-3xl font-bold mb-2">{formData.name}</h1>
+                  <p className="text-lg text-muted-foreground">{formData.lagerplats}</p>
+                </div>
+
+                {/* Main Image */}
+                {existingPhotos.length > 0 && (
+                  <div className="mb-6">
+                    <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
+                      <Image
+                        src={existingPhotos[primaryImageIndex] || existingPhotos[0]}
+                        alt={formData.name}
+                        width={800}
+                        height={400}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Details */}
+                <div className="grid grid-cols-2 gap-6 mb-6">
+                  <div>
+                    <h3 className="font-semibold mb-2">Kategori</h3>
+                    <p className="text-muted-foreground">
+                      {formData.category === 'electronics' ? 'Elektronik' :
+                       formData.category === 'business' ? 'Affärsverksamhet' : 'Övrigt'}
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold mb-2">Skick</h3>
+                    <p className="text-muted-foreground">{formData.condition}</p>
+                  </div>
+                  {formData.value && (
+                    <div>
+                      <h3 className="font-semibold mb-2">Pris</h3>
+                      <p className="text-2xl font-bold text-primary">{formData.value} kr</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Description */}
+                {formData.description && (
+                  <div className="mb-6">
+                    <h3 className="font-semibold mb-2">Beskrivning</h3>
+                    <p className="text-muted-foreground whitespace-pre-wrap">{formData.description}</p>
+                  </div>
+                )}
+
+                {/* Additional Images */}
+                {existingPhotos.length > 1 && (
+                  <div className="mb-6">
+                    <h3 className="font-semibold mb-4">Fler bilder</h3>
+                    <div className="grid grid-cols-3 gap-4">
+                      {existingPhotos.slice(1, 4).map((photo, index) => (
+                        <div key={index} className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+                          <Image
+                            src={photo}
+                            alt={`${formData.name} ${index + 2}`}
+                            width={200}
+                            height={200}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="text-center text-sm text-muted-foreground mt-8">
+                  Genererad {new Date().toLocaleDateString('sv-SE')}
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-end gap-3 p-6 border-t flex-shrink-0">
+              <Button
+                variant="outline"
+                onClick={() => setShowPdfView(false)}
+              >
+                Stäng
+              </Button>
+              <Button
+                onClick={handlePdfSave}
+                className="bg-primary hover:bg-primary/90"
+              >
+                Spara som PDF
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
