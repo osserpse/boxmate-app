@@ -126,7 +126,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         {/* Hero Section */}
         <div className="text-center mb-16">
           <h1 className="text-4xl font-bold text-foreground mb-4">
-            Få överblick över {companyName}s saker
+            Få överblick över {companyName}s tillgångar
           </h1>
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
             Se vad som redan finns, vad som används och vad som kan gå vidare. Markera för återbruk eller försäljning – och undvik onödiga inköp.
