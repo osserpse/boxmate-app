@@ -39,10 +39,7 @@ export interface AddItemRequest {
 
 export async function addItem(data: AddItemRequest) {
   try {
-    console.log('addItem called with:', data);
-    console.log('Creating Supabase client...');
     const supabase = createClient()
-    console.log('Supabase client created successfully');
 
     // Use pre-uploaded photo URLs (uploaded from client side)
     const photo_urls: string[] = data.photoUrls || []
@@ -51,36 +48,26 @@ export async function addItem(data: AddItemRequest) {
     const photos_json = photo_urls.length > 0 ? JSON.stringify(photo_urls) : null
     const primary_photo_url = photo_urls.length > 0 ? photo_urls[0] : undefined
 
-    console.log('Inserting item into database:', {
+    const insertData = {
       name: data.name,
+      location: data.lagerplats, // Keep old location field for compatibility
       lagerplats: data.lagerplats,
       lokal: data.lokal,
       hyllplats: data.hyllplats,
       description: data.description,
       value: data.value,
       category: data.category,
-      subcategory: data.subcategory,
+      subcategory: data.category === 'electronics' ? (data.subcategory || null) : null,
       condition: data.condition,
       photo_url: primary_photo_url,
       photos: photos_json
-    });
+    };
+
 
     // Insert item into database
     const { data: newItem, error } = await supabase
       .from('items')
-      .insert({
-        name: data.name,
-        lagerplats: data.lagerplats,
-        lokal: data.lokal,
-        hyllplats: data.hyllplats,
-        description: data.description,
-        value: data.value,
-        category: data.category,
-        subcategory: data.category === 'electronics' ? data.subcategory : null,
-        condition: data.condition,
-        photo_url: primary_photo_url,
-        photos: photos_json
-      })
+      .insert(insertData)
       .select()
       .single()
 
@@ -89,7 +76,6 @@ export async function addItem(data: AddItemRequest) {
       throw new Error(`Misslyckades att spara produkt: ${error.message}`)
     }
 
-    console.log('Successfully saved item:', newItem);
 
     // Revalidate dashboard to show new item
     revalidatePath('/dashboard')
@@ -126,13 +112,14 @@ export async function updateItem(itemId: string, data: AddItemRequest) {
       .from('items')
       .update({
         name: data.name,
+        location: data.lagerplats, // Keep old location field for compatibility
         lagerplats: data.lagerplats,
         lokal: data.lokal,
         hyllplats: data.hyllplats,
         description: data.description,
         value: data.value,
         category: data.category,
-        subcategory: data.category === 'electronics' ? data.subcategory : null,
+        subcategory: data.category === 'electronics' ? (data.subcategory || null) : null,
         condition: data.condition,
         photo_url: entire_photo_url,
         photos: photos_json

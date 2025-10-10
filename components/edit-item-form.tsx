@@ -340,14 +340,13 @@ export function EditItemForm({
                 Värde (kr)
               </label>
               <div className="relative">
-                <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                 <Input
                   id="value"
                   type="number"
                   placeholder="0"
                   value={formData.value}
                   onChange={(e) => handleInputChange('value', e.target.value)}
-                  className="h-11 pl-10"
+                  className="h-11 pl-4"
                 />
               </div>
             </div>

@@ -81,7 +81,7 @@ export async function createAd(data: AdRequest) {
         description: data.description,
         value: data.value,
         category: data.category,
-        subcategory: data.category === 'electronics' ? data.subcategory : null,
+        subcategory: data.category === 'electronics' ? (data.subcategory || null) : null,
         condition: data.condition,
         photo_url: primary_photo_url,
         photos: photos_json,
@@ -137,7 +137,7 @@ export async function updateAd(adId: string, data: AdRequest) {
         description: data.description,
         value: data.value,
         category: data.category,
-        subcategory: data.category === 'electronics' ? data.subcategory : null,
+        subcategory: data.category === 'electronics' ? (data.subcategory || null) : null,
         condition: data.condition,
         photo_url: primary_photo_url,
         photos: photos_json

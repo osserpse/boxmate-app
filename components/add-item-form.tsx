@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DialogClose } from '@/components/ui/dialog';
 import { Plus, DollarSign } from 'lucide-react';
-import { addItem, AddItemData } from '@/lib/actions';
+import { addItem, AddItemRequest } from '@/lib/actions';
 import { FileUpload } from '@/components/file-upload';
 import { ConditionDropdown } from '@/components/ui/condition-dropdown';
 
@@ -61,7 +61,50 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
     setError('');
 
     try {
-      const addData: AddItemData = {
+      // Upload files first if any
+      let uploadedPhotoUrls: string[] = [];
+
+      if (files.length > 0) {
+
+        // Create Supabase client for file upload
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+        const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+        const { createClient } = await import('@supabase/supabase-js');
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          try {
+
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}-${i}.${fileExt}`;
+
+            const { error: uploadError } = await supabase.storage
+              .from('item-photos')
+              .upload(fileName, file, {
+                contentType: file.type,
+                cacheControl: '3600',
+                upsert: false
+              });
+
+            if (uploadError) {
+              throw new Error(`Upload failed: ${uploadError.message}`);
+            }
+
+            const { data: { publicUrl } } = supabase.storage
+              .from('item-photos')
+              .getPublicUrl(fileName);
+
+            uploadedPhotoUrls.push(publicUrl);
+
+          } catch (fileError) {
+            console.error(`Error uploading ${file.name}:`, fileError);
+            throw new Error(`Fel vid uppladdning av ${file.name}: ${fileError}`);
+          }
+        }
+      }
+
+      const addData: AddItemRequest = {
         name: formData.name,
         lagerplats: formData.lagerplats,
         lokal: formData.lokal,
@@ -71,8 +114,9 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
         category: formData.category,
         subcategory: formData.subcategory,
         condition: formData.condition,
-        photos: files.length > 0 ? files : undefined
+        photoUrls: uploadedPhotoUrls.length > 0 ? uploadedPhotoUrls : undefined
       };
+
 
       const result = await addItem(addData);
 
@@ -262,14 +306,13 @@ export function AddItemForm({ onItemAdded }: AddItemFormProps) {
           Värde (kr)
         </label>
         <div className="relative">
-          <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
           <Input
             id="value"
             type="number"
             placeholder="0"
             value={formData.value}
             onChange={(e) => handleInputChange('value', e.target.value)}
-            className="h-11 pl-10"
+            className="h-11 pl-4"
           />
         </div>
       </div>
